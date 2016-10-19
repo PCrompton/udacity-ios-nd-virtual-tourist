@@ -22,8 +22,6 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate {
     }
     
     @IBAction func handleLongPress(_ recognizer: UILongPressGestureRecognizer) {
-        print("Long Press Activated")
-        
         if recognizer.state == UIGestureRecognizerState.began {
             let touchPoint = recognizer.location(in: mapView)
             let coordinate = mapView.convert(touchPoint, toCoordinateFrom: mapView)
@@ -48,6 +46,12 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate {
         }
         
         return pinView
+    }
+    
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        let photoAlbumVC = storyboard?.instantiateViewController(withIdentifier: "PhotoAlbumViewController") as! PhotoAlbumViewController
+        photoAlbumVC.annotation = view.annotation
+        show(photoAlbumVC, sender: self)
     }
 
 }
