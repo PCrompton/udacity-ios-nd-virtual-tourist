@@ -10,6 +10,13 @@ import Foundation
 
 class SuperClient: NSObject {
     
+    // MARK: HTTPMethods
+    enum HTTPMethod: String {
+        case get = "GET"
+        case post = "POST"
+        case put = "PUT"
+        case delete = "DELETE"
+    }
     // MARK: Properties
     var session = URLSession.shared
     
