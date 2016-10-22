@@ -13,14 +13,8 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-    }
-    
     @IBAction func editButton(_ sender: AnyObject) {
     }
-    
     @IBAction func handleLongPress(_ recognizer: UILongPressGestureRecognizer) {
         if recognizer.state == UIGestureRecognizerState.began {
             let touchPoint = recognizer.location(in: mapView)
