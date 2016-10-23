@@ -21,41 +21,41 @@ extension Pin {
     @NSManaged public var pages: Int16
     @NSManaged public var perPage: Int16
     @NSManaged public var total: Int16
-    @NSManaged public var photo: NSOrderedSet?
+    @NSManaged public var photos: NSOrderedSet?
 
 }
 
-// MARK: Generated accessors for photo
+// MARK: Generated accessors for photos
 extension Pin {
 
-    @objc(insertObject:inPhotoAtIndex:)
-    @NSManaged public func insertIntoPhoto(_ value: Photo, at idx: Int)
+    @objc(insertObject:inPhotosAtIndex:)
+    @NSManaged public func insertIntoPhotos(_ value: Photo, at idx: Int)
 
-    @objc(removeObjectFromPhotoAtIndex:)
-    @NSManaged public func removeFromPhoto(at idx: Int)
+    @objc(removeObjectFromPhotosAtIndex:)
+    @NSManaged public func removeFromPhotos(at idx: Int)
 
-    @objc(insertPhoto:atIndexes:)
-    @NSManaged public func insertIntoPhoto(_ values: [Photo], at indexes: NSIndexSet)
+    @objc(insertPhotos:atIndexes:)
+    @NSManaged public func insertIntoPhotos(_ values: [Photo], at indexes: NSIndexSet)
 
-    @objc(removePhotoAtIndexes:)
-    @NSManaged public func removeFromPhoto(at indexes: NSIndexSet)
+    @objc(removePhotosAtIndexes:)
+    @NSManaged public func removeFromPhotos(at indexes: NSIndexSet)
 
-    @objc(replaceObjectInPhotoAtIndex:withObject:)
-    @NSManaged public func replacePhoto(at idx: Int, with value: Photo)
+    @objc(replaceObjectInPhotosAtIndex:withObject:)
+    @NSManaged public func replacePhotos(at idx: Int, with value: Photo)
 
-    @objc(replacePhotoAtIndexes:withPhoto:)
-    @NSManaged public func replacePhoto(at indexes: NSIndexSet, with values: [Photo])
+    @objc(replacePhotosAtIndexes:withPhotos:)
+    @NSManaged public func replacePhotos(at indexes: NSIndexSet, with values: [Photo])
 
-    @objc(addPhotoObject:)
-    @NSManaged public func addToPhoto(_ value: Photo)
+    @objc(addPhotosObject:)
+    @NSManaged public func addToPhotos(_ value: Photo)
 
-    @objc(removePhotoObject:)
-    @NSManaged public func removeFromPhoto(_ value: Photo)
+    @objc(removePhotosObject:)
+    @NSManaged public func removeFromPhotos(_ value: Photo)
 
-    @objc(addPhoto:)
-    @NSManaged public func addToPhoto(_ values: NSOrderedSet)
+    @objc(addPhotos:)
+    @NSManaged public func addToPhotos(_ values: NSOrderedSet)
 
-    @objc(removePhoto:)
-    @NSManaged public func removeFromPhoto(_ values: NSOrderedSet)
+    @objc(removePhotos:)
+    @NSManaged public func removeFromPhotos(_ values: NSOrderedSet)
 
 }
