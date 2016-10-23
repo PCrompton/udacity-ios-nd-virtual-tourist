@@ -1,5 +1,5 @@
 //
-//  photoCollectionViewCell.swift
+//  PhotoCollectionViewCell.swift
 //  Virtual Tourist
 //
 //  Created by Paul Crompton on 10/22/16.
@@ -8,6 +8,7 @@
 
 import UIKit
 
-class photoCollectionViewCell: UICollectionViewCell {
+class PhotoCollectionViewCell: UICollectionViewCell {
     
+    @IBOutlet weak var imageView: UIImageView!
 }

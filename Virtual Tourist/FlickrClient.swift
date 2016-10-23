@@ -11,6 +11,14 @@ import UIKit
 
 class FlickrClient: SuperClient {
     
+    // MARK: Shared Instance
+    class func sharedInstance() -> FlickrClient {
+        struct Singleton {
+            static var sharedInstance = FlickrClient()
+        }
+        return Singleton.sharedInstance
+    }
+    
     func search(by latitude: Double, by longitude: Double, completion: ((_ photosDictionary: [String:Any]) -> Void)?) {
         let methodParameters = [
             Constants.ParameterKeys.Method: Constants.ParameterValues.SearchMethod,
@@ -29,7 +37,8 @@ class FlickrClient: SuperClient {
     }
     
     func getImages(with methodParameters: [String: Any], completion: ((_ photosDictionary: [String: Any]) -> Void)?) {
-        let url = getURL(for: FlickrClient.Constants.urlComponents, with: nil, with: methodParameters)
+        let url = getURL(for: Constants.urlComponents, with: nil, with: methodParameters)
+        print(url.absoluteString)
         let request = createRequest(for: url, as: HTTPMethod.get, with: nil, with: nil)
         
         createAndRunTask(for: request) { (result, error) in

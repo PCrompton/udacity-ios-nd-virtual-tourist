@@ -17,6 +17,7 @@ class SuperClient: NSObject {
         case put = "PUT"
         case delete = "DELETE"
     }
+    
     // MARK: Properties
     var session = URLSession.shared
     
