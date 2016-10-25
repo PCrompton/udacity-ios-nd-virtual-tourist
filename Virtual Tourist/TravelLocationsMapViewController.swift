@@ -64,6 +64,10 @@ class TravelLocationsMapViewController: CoreDataViewController, MKMapViewDelegat
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         let photoAlbumVC = storyboard?.instantiateViewController(withIdentifier: "PhotoAlbumViewController") as! PhotoAlbumViewController
-        show(photoAlbumVC, sender: self)
+        if let annotation = view.annotation as? PointAnnotation {
+            photoAlbumVC.pin = annotation.pin
+            show(photoAlbumVC, sender: self)
+        }
+        
     }
 }

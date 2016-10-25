@@ -27,6 +27,7 @@
 		9680E9B31DBD53C8006EAC53 /* Photo+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9680E9AF1DBD53C8006EAC53 /* Photo+CoreDataClass.swift */; };
 		9680E9B41DBD53C8006EAC53 /* Photo+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9680E9B01DBD53C8006EAC53 /* Photo+CoreDataProperties.swift */; };
 		9680E9BB1DBD9FE3006EAC53 /* CoreDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9680E9BA1DBD9FE3006EAC53 /* CoreDataViewController.swift */; };
+		9680E9C31DBEDEF0006EAC53 /* PointAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9680E9C21DBEDEF0006EAC53 /* PointAnnotation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,6 +74,7 @@
 		9680E9AF1DBD53C8006EAC53 /* Photo+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataClass.swift"; sourceTree = "<group>"; };
 		9680E9B01DBD53C8006EAC53 /* Photo+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		9680E9BA1DBD9FE3006EAC53 /* CoreDataViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataViewController.swift; sourceTree = "<group>"; };
+		9680E9C21DBEDEF0006EAC53 /* PointAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PointAnnotation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -212,6 +214,7 @@
 				9680E95B1DB5837A006EAC53 /* Main.storyboard */,
 				9680E9601DB5837A006EAC53 /* LaunchScreen.storyboard */,
 				9680E99E1DBC4CA6006EAC53 /* PhotoCollectionViewCell.swift */,
+				9680E9C21DBEDEF0006EAC53 /* PointAnnotation.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -378,6 +381,7 @@
 				9680E9B31DBD53C8006EAC53 /* Photo+CoreDataClass.swift in Sources */,
 				9680E9BB1DBD9FE3006EAC53 /* CoreDataViewController.swift in Sources */,
 				9680E9B21DBD53C8006EAC53 /* Pin+CoreDataProperties.swift in Sources */,
+				9680E9C31DBEDEF0006EAC53 /* PointAnnotation.swift in Sources */,
 				9680E99F1DBC4CA6006EAC53 /* PhotoCollectionViewCell.swift in Sources */,
 				9680E9B11DBD53C8006EAC53 /* Pin+CoreDataClass.swift in Sources */,
 				9680E9931DBAF90B006EAC53 /* FlickrClient.swift in Sources */,

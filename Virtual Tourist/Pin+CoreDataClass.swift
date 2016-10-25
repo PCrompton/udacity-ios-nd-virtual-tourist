@@ -13,9 +13,9 @@ import MapKit
 public class Pin: NSManagedObject {
     
     var coordinate: CLLocationCoordinate2D?
-    var annotation: MKPointAnnotation {
+    var annotation: PointAnnotation {
         get {
-            let annotation = MKPointAnnotation()
+            let annotation = PointAnnotation(pin: self)
             annotation.coordinate = CLLocationCoordinate2DMake(latitude, longitude)
             return annotation
         }
