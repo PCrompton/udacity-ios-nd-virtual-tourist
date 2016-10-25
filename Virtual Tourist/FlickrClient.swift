@@ -19,7 +19,7 @@ class FlickrClient: SuperClient {
         return Singleton.sharedInstance
     }
     
-    func search(by latitude: Double, by longitude: Double, completion: ((_ photosDictionary: [String:Any]) -> Void)?) {
+    func search(by latitude: Double, by longitude: Double, completion: ((_ photos: [Photo]) -> Void)?) {
         let methodParameters = [
             Constants.ParameterKeys.Method: Constants.ParameterValues.SearchMethod,
             Constants.ParameterKeys.APIKey: Constants.ParameterValues.APIKey,
@@ -29,19 +29,19 @@ class FlickrClient: SuperClient {
             Constants.ParameterKeys.Format: Constants.ParameterValues.ResponseFormat,
             Constants.ParameterKeys.NoJSONCallback: Constants.ParameterValues.DisableJSONCallback
         ]
-        getImages(with: methodParameters) {(photosDictionary) in
+        getPhotos(with: methodParameters) {(photos) in
             performUpdatesOnMain {
-                completion?(photosDictionary)
+                completion?(photos)
             }
         }
     }
     
-    func getImages(with methodParameters: [String: Any], completion: ((_ photosDictionary: [String: Any]) -> Void)?) {
+    func getPhotos(with methodParameters: [String: Any], completion: ((_ photos: [Photo]) -> Void)?) {
         let url = getURL(for: Constants.urlComponents, with: nil, with: methodParameters)
         print(url.absoluteString)
         let request = createRequest(for: url, as: HTTPMethod.get, with: nil, with: nil)
         
-        createAndRunTask(for: request) { (result, error) in
+        getJson(for: request) { (result, error) in
             performUpdatesOnMain {
                 /* GUARD: Did Flickr return an error (stat != ok)? */
                 guard let stat = result?[Constants.ResponseKeys.Status] as? String , stat == Constants.ResponseValues.OKStatus else {
@@ -58,7 +58,45 @@ class FlickrClient: SuperClient {
                     fatalError("Cannot find key '\(Constants.ResponseKeys.Pages)' in \(photosDictionary)")
                 }
                 
-                completion?(photosDictionary)
+                guard let photos = photosDictionary[Constants.ResponseKeys.Photo] as? [[String:Any]] else {
+                    fatalError("Cannot find key '\(Constants.ResponseKeys.Photo)' in \(photosDictionary)")
+                }
+                
+                var photosArray = [Photo]()
+                for photo in photos {
+                    
+                    guard let title = photo[Constants.ResponseKeys.Title] as? String else {
+                        fatalError("Cannot find key '\(Constants.ResponseKeys.Title)' in \(photo)")
+                    }
+                    
+                    guard let urlString = photo[Constants.ResponseKeys.MediumURL] as? String else {
+                        fatalError("Cannot find key '\(Constants.ResponseKeys.MediumURL)' in \(photo)")
+                    }
+                    
+                    guard let url = URL(string: urlString) else {
+                        fatalError("Cannot convert '\(urlString) to type URL")
+                    }
+                    
+                    photosArray.append(Photo(url: url, title: title))
+                }
+                completion?(photosArray)
+            }
+        }
+    }
+    
+    func getPhoto(from url: URL, completion: @escaping (_ imageData: Data?, _ error: Error?) -> Void) {
+        let request = createRequest(for: url, as: HTTPMethod.get, with: nil, with: nil)
+        createAndRunTask(for: request) { (data, error) in
+            performUpdatesOnMain {
+                guard (error == nil) else {
+                    completion(nil, error)
+                    return
+                }
+                guard let data = data else {
+                    completion(nil, error)
+                    return
+                }
+                completion(data, nil)
             }
         }
     }
@@ -70,5 +108,12 @@ class FlickrClient: SuperClient {
         let maximumLon = min(longitude + Constants.SearchBBoxHalfWidth, Constants.SearchLonRange.1)
         let maximumLat = min(latitude + Constants.SearchBBoxHalfHeight, Constants.SearchLatRange.1)
         return "\(minimumLon),\(minimumLat),\(maximumLon),\(maximumLat)"
+    }
+}
+
+extension FlickrClient {
+    struct Photo {
+        let url: URL
+        let title: String
     }
 }

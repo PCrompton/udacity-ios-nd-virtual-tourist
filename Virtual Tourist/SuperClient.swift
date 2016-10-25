@@ -37,27 +37,63 @@ class SuperClient: NSObject {
         return components.url!
     }
     
-    func createAndRunTask(for request: URLRequest, taskCompletion: @escaping (_ result: [String: Any]?, _ error: Error?) -> Void) {
-        
+    func createAndRunTask(for request: URLRequest, with completion: @escaping (_ data: Data?, _ error: Error?) -> Void) {
         let session = URLSession.shared
         let task = session.dataTask(with: request) { (data, response, error) in
             performUpdatesOnMain {
                 guard (error == nil) else {
-                    taskCompletion(nil, error)
+                    completion(nil, error)
                     return
                 }
                 
                 guard let data = data else {
-                    taskCompletion(nil, error)
+                    completion(nil, error)
                     return
                 }
                 
-                SuperClient.convertDataWithCompletionHandler(data: data, completionHandlerForConvertData: taskCompletion)
+                completion(data, nil)
             }
         }
-
         task.resume()
     }
+    
+    func getJson(for request: URLRequest, with completion: @escaping (_ result: [String: Any]?, _ error: Error?) -> Void) {
+        createAndRunTask(for: request) { (data, error) in
+            guard (error == nil) else {
+                completion(nil, error)
+                return
+            }
+            
+            guard let data = data else {
+                completion(nil, error)
+                return
+            }
+            
+            self.convertDataWithCompletionHandler(data: data, completionHandlerForConvertData: completion)
+        }
+    }
+    
+//    func createAndRunTask(for request: URLRequest, taskCompletion: @escaping (_ result: [String: Any]?, _ error: Error?) -> Void) {
+//        
+//        let session = URLSession.shared
+//        let task = session.dataTask(with: request) { (data, response, error) in
+//            performUpdatesOnMain {
+//                guard (error == nil) else {
+//                    taskCompletion(nil, error)
+//                    return
+//                }
+//                
+//                guard let data = data else {
+//                    taskCompletion(nil, error)
+//                    return
+//                }
+//                
+//                //self.convertDataWithCompletionHandler(data: data, completionHandlerForConvertData: taskCompletion)
+//            }
+//        }
+//
+//        task.resume()
+//    }
     
     func createRequest(for url: URL, as type: HTTPMethod?, with headers: [String: String]?, with body: String?) -> URLRequest {
         var request = URLRequest(url: url)
@@ -75,13 +111,13 @@ class SuperClient: NSObject {
         return request
     }
     
-    class func serializeDataToJson(data: Data) throws -> [String: Any]? {
+    func serializeDataToJson(data: Data) throws -> [String: Any]? {
         let parsedResult: [String: Any]?
             parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any]
         return parsedResult
     }
     
-    class func convertDataWithCompletionHandler(data: Data, completionHandlerForConvertData: (_ result: [String: Any]?, _ error: NSError?) -> Void) {
+    func convertDataWithCompletionHandler(data: Data, completionHandlerForConvertData: (_ result: [String: Any]?, _ error: NSError?) -> Void) {
         let parsedResult: [String: Any]?
         do {
             parsedResult = try serializeDataToJson(data: data)
@@ -98,5 +134,4 @@ class SuperClient: NSObject {
         }
         
     }
-
 }
