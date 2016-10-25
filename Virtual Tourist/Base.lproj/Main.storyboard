@@ -81,7 +81,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ImageCell" id="kcQ-GI-Zxj" customClass="PhotoCollectionViewCell" customModule="Virtual_Tourist" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotoCollectionCell" id="kcQ-GI-Zxj" customClass="PhotoCollectionViewCell" customModule="Virtual_Tourist" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="136" height="136"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -89,15 +89,19 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="del-Xl-nPF"/>
+                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="seN-gg-mDN"/>
                                             </subviews>
                                         </view>
                                         <constraints>
                                             <constraint firstItem="del-Xl-nPF" firstAttribute="centerX" secondItem="kcQ-GI-Zxj" secondAttribute="centerX" id="93O-Kx-Yu9"/>
+                                            <constraint firstItem="seN-gg-mDN" firstAttribute="centerY" secondItem="kcQ-GI-Zxj" secondAttribute="centerY" id="YTb-lk-nC5"/>
                                             <constraint firstItem="del-Xl-nPF" firstAttribute="centerY" secondItem="kcQ-GI-Zxj" secondAttribute="centerY" id="gIe-41-Ibe"/>
                                             <constraint firstItem="del-Xl-nPF" firstAttribute="height" secondItem="kcQ-GI-Zxj" secondAttribute="height" id="h1D-d0-AOg"/>
                                             <constraint firstItem="del-Xl-nPF" firstAttribute="width" secondItem="kcQ-GI-Zxj" secondAttribute="width" id="n4Z-lO-XUD"/>
+                                            <constraint firstItem="seN-gg-mDN" firstAttribute="centerX" secondItem="kcQ-GI-Zxj" secondAttribute="centerX" id="tQX-nC-d0N"/>
                                         </constraints>
                                         <connections>
+                                            <outlet property="activityIndicator" destination="seN-gg-mDN" id="xDq-In-X0n"/>
                                             <outlet property="imageView" destination="del-Xl-nPF" id="0rY-Vj-Yg7"/>
                                         </connections>
                                     </collectionViewCell>
