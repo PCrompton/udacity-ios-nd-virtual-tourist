@@ -8,14 +8,30 @@
 
 import Foundation
 import CoreData
+import MapKit
 
 public class Pin: NSManagedObject {
     
-    convenience init(latitude: Double, longitude: Double, context: NSManagedObjectContext) {
+    var coordinate: CLLocationCoordinate2D?
+    var annotation: MKPointAnnotation {
+        get {
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = CLLocationCoordinate2DMake(latitude, longitude)
+            return annotation
+        }
+    }
+    
+    convenience init(with coordinate: CLLocationCoordinate2D, insertInto context: NSManagedObjectContext) {
         if let ent = NSEntityDescription.entity(forEntityName: "Pin", in: context) {
             self.init(entity: ent, insertInto: context)
+            self.coordinate = coordinate
+            self.latitude = coordinate.latitude
+            self.longitude = coordinate.longitude
         } else {
             fatalError("Unable to find Entity name!")
         }
+    }
+    
+    func getPhotos() {
     }
 }

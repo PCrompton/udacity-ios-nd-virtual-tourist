@@ -26,6 +26,7 @@
 		9680E9B21DBD53C8006EAC53 /* Pin+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9680E9AE1DBD53C8006EAC53 /* Pin+CoreDataProperties.swift */; };
 		9680E9B31DBD53C8006EAC53 /* Photo+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9680E9AF1DBD53C8006EAC53 /* Photo+CoreDataClass.swift */; };
 		9680E9B41DBD53C8006EAC53 /* Photo+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9680E9B01DBD53C8006EAC53 /* Photo+CoreDataProperties.swift */; };
+		9680E9BB1DBD9FE3006EAC53 /* CoreDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9680E9BA1DBD9FE3006EAC53 /* CoreDataViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,6 +72,7 @@
 		9680E9AE1DBD53C8006EAC53 /* Pin+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Pin+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		9680E9AF1DBD53C8006EAC53 /* Photo+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataClass.swift"; sourceTree = "<group>"; };
 		9680E9B01DBD53C8006EAC53 /* Photo+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		9680E9BA1DBD9FE3006EAC53 /* CoreDataViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,9 +125,9 @@
 			children = (
 				9680E9961DBAFD51006EAC53 /* GCDBlackBox.swift */,
 				9680E9571DB5837A006EAC53 /* AppDelegate.swift */,
-				9680E98F1DBAF73D006EAC53 /* Model */,
+				9680E98F1DBAF73D006EAC53 /* Models */,
 				9680E99D1DBC4C49006EAC53 /* Views */,
-				9680E9861DB58402006EAC53 /* View Controllers */,
+				9680E9B51DBD9D1C006EAC53 /* Controllers */,
 				9680E9871DB58416006EAC53 /* Assets */,
 				9680E9881DB58427006EAC53 /* Supporting Files */,
 			);
@@ -175,7 +177,7 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		9680E98F1DBAF73D006EAC53 /* Model */ = {
+		9680E98F1DBAF73D006EAC53 /* Models */ = {
 			isa = PBXGroup;
 			children = (
 				9680E9A21DBD4FB2006EAC53 /* CoreDataStack.swift */,
@@ -183,7 +185,7 @@
 				9680E9AC1DBD51D5006EAC53 /* Managed Objects */,
 				9680E9901DBAF74B006EAC53 /* Clients */,
 			);
-			name = Model;
+			name = Models;
 			sourceTree = "<group>";
 		};
 		9680E9901DBAF74B006EAC53 /* Clients */ = {
@@ -207,8 +209,8 @@
 		9680E99D1DBC4C49006EAC53 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				9680E9601DB5837A006EAC53 /* LaunchScreen.storyboard */,
 				9680E95B1DB5837A006EAC53 /* Main.storyboard */,
+				9680E9601DB5837A006EAC53 /* LaunchScreen.storyboard */,
 				9680E99E1DBC4CA6006EAC53 /* PhotoCollectionViewCell.swift */,
 			);
 			name = Views;
@@ -223,6 +225,15 @@
 				9680E9B01DBD53C8006EAC53 /* Photo+CoreDataProperties.swift */,
 			);
 			name = "Managed Objects";
+			sourceTree = "<group>";
+		};
+		9680E9B51DBD9D1C006EAC53 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				9680E9BA1DBD9FE3006EAC53 /* CoreDataViewController.swift */,
+				9680E9861DB58402006EAC53 /* View Controllers */,
+			);
+			name = Controllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -365,6 +376,7 @@
 				9680E9B41DBD53C8006EAC53 /* Photo+CoreDataProperties.swift in Sources */,
 				9680E9581DB5837A006EAC53 /* AppDelegate.swift in Sources */,
 				9680E9B31DBD53C8006EAC53 /* Photo+CoreDataClass.swift in Sources */,
+				9680E9BB1DBD9FE3006EAC53 /* CoreDataViewController.swift in Sources */,
 				9680E9B21DBD53C8006EAC53 /* Pin+CoreDataProperties.swift in Sources */,
 				9680E99F1DBC4CA6006EAC53 /* PhotoCollectionViewCell.swift in Sources */,
 				9680E9B11DBD53C8006EAC53 /* Pin+CoreDataClass.swift in Sources */,

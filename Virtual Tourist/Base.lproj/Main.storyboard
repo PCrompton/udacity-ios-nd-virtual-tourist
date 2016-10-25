@@ -71,9 +71,6 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="128" id="Xeu-4V-s7S"/>
                                 </constraints>
-                                <connections>
-                                    <outlet property="delegate" destination="5d2-3a-0xe" id="KEO-dp-KTD"/>
-                                </connections>
                             </mapView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="dQi-g6-548">
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -88,7 +85,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="136" height="136"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="137" height="136"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="136" height="136"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="del-Xl-nPF"/>
@@ -106,8 +103,8 @@
                                     </collectionViewCell>
                                 </cells>
                                 <connections>
-                                    <outlet property="dataSource" destination="5d2-3a-0xe" id="c3B-2c-nom"/>
-                                    <outlet property="delegate" destination="5d2-3a-0xe" id="8jT-mq-m62"/>
+                                    <outlet property="dataSource" destination="5d2-3a-0xe" id="K6C-nE-mNW"/>
+                                    <outlet property="delegate" destination="5d2-3a-0xe" id="8Tc-kt-buS"/>
                                 </connections>
                             </collectionView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="v3o-Vb-mVK">

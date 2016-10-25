@@ -7,11 +7,28 @@
 //
 
 import UIKit
+import CoreData
 import MapKit
 
-class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate {
+class TravelLocationsMapViewController: CoreDataViewController, MKMapViewDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
+    
+    override func viewDidLoad() {
+        title = "Virtual Tourist"
+        
+        // Get the stack
+        let fetchRequst = NSFetchRequest<NSManagedObject>(entityName: "Pin")
+        fetchRequst.sortDescriptors = [NSSortDescriptor(key: "page", ascending: true)]
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequst, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
+        fetchedResultsController?.delegate = self
+        executeSearch()
+        for object in fetchedResultsController!.fetchedObjects! {
+            if let pin = object as? Pin {
+                mapView.addAnnotation(pin.annotation)
+            }
+        }
+    }
     
     @IBAction func editButton(_ sender: AnyObject) {
     }
@@ -19,9 +36,13 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate {
         if recognizer.state == UIGestureRecognizerState.began {
             let touchPoint = recognizer.location(in: mapView)
             let coordinate = mapView.convert(touchPoint, toCoordinateFrom: mapView)
-            let annotation = MKPointAnnotation()
-            annotation.coordinate = coordinate
-            mapView.addAnnotation(annotation)
+            let pin = Pin(with: coordinate, insertInto: stack.context)
+            mapView.addAnnotation(pin.annotation)
+            do {
+                try stack.saveContext()
+            } catch {
+                fatalError("Failed to save context!")
+            }
         }
     }
     
@@ -38,14 +59,11 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate {
         else {
             pinView!.annotation = annotation
         }
-        
         return pinView
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         let photoAlbumVC = storyboard?.instantiateViewController(withIdentifier: "PhotoAlbumViewController") as! PhotoAlbumViewController
-        photoAlbumVC.annotation = view.annotation
         show(photoAlbumVC, sender: self)
     }
-
 }
