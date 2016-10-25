@@ -8,16 +8,20 @@
 
 import Foundation
 import CoreData
+import UIKit
 
 public class Photo: NSManagedObject {
     
-    convenience init(data: NSData, pin: Pin, title: String?, url: String?, insertInto context: NSManagedObjectContext) {
+    var image: UIImage? {
+        get {
+            return UIImage(data: self.data as! Data)
+        }
+    }
+    
+    convenience init(with data: NSData, insertInto context: NSManagedObjectContext) {
         if let ent = NSEntityDescription.entity(forEntityName: "Photo", in: context) {
             self.init(entity: ent, insertInto: context)
             self.data = data
-            self.pin = pin
-            self.title = title
-            self.url = url
         } else {
             fatalError("Unable to find Entity name!")
         }

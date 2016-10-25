@@ -21,6 +21,16 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
     override func viewDidLoad() {
         super.viewDidLoad()
         addAnnotationToMapView(completion: nil)
+        
+        let fetchRequst = NSFetchRequest<NSManagedObject>(entityName: "Photo")
+        fetchRequst.sortDescriptors = [NSSortDescriptor(key: "data", ascending: true)]
+        if let pin = self.pin {
+            let predicate = NSPredicate(format: "pin = %@", argumentArray: [pin])
+            fetchRequst.predicate = predicate
+        }
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequst, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
+        fetchedResultsController?.delegate = self
+        executeSearch()
     }
     
     func setPhotoUrls(completion: @escaping () -> Void) {
@@ -79,8 +89,9 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCollectionCell", for: indexPath) as! PhotoCollectionViewCell
         if let pin = pin, let photos = pin.photos, photos.count > 0 {
-            let photo = photos[indexPath.row] as! Photo
-            cell.imageView.image = UIImage(data: photo.data as! Data)
+            let photo = fetchedResultsController?.object(at: indexPath) as! Photo
+            cell.activityIndicator.stopAnimating()
+            cell.imageView.image = photo.image
         } else {
             setPhotoUrls {
                 let flickrClient = FlickrClient.sharedInstance()
@@ -95,18 +106,24 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
                     guard let data = data else {
                         fatalError("No Data returned!")
                     }
-                    
                     guard let image = UIImage(data: data) else {
-                        fatalError("Unable to convert data to image")
+                        fatalError("Unable to Convert data to UIImage: \(data)")
                     }
                     cell.activityIndicator.stopAnimating()
                     cell.imageView.image = image
-                    
-                    //let photo = Photo(data: data as NSData, pin: self.pin!, title: nil, url: url.absoluteString, insertInto: self.pin!.managedObjectContext!)
+                    self.savePhoto(data: data, url: url)
                 }
             }
         }
         return cell
+    }
+    
+    func savePhoto(data: Data, url: URL) {
+        print("Will Instantiate Photo")
+        let photo = Photo(with: data as NSData, insertInto: stack.context)
+        photo.pin = pin
+        photo.url = url.absoluteString
+        stack.safeSaveContext()
     }
     
     // MARK: UICollectionViewDelegate

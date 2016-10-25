@@ -87,17 +87,15 @@ class FlickrClient: SuperClient {
     func getPhoto(from url: URL, completion: @escaping (_ imageData: Data?, _ error: Error?) -> Void) {
         let request = createRequest(for: url, as: HTTPMethod.get, with: nil, with: nil)
         createAndRunTask(for: request) { (data, error) in
-            performUpdatesOnMain {
-                guard (error == nil) else {
-                    completion(nil, error)
-                    return
-                }
-                guard let data = data else {
-                    completion(nil, error)
-                    return
-                }
-                completion(data, nil)
+            guard (error == nil) else {
+                completion(nil, error)
+                return
             }
+            guard let data = data else {
+                completion(nil, error)
+                return
+            }
+            completion(data, nil)
         }
     }
     
