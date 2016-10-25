@@ -16,11 +16,26 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
     @IBOutlet weak var photoCollectionView: UICollectionView!
     
     var pin: Pin?
-        
+    var photoURLs: [URL]?
+   
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         addAnnotationToMapView(completion: nil)
+    }
+    
+    func setPhotoUrls(completion: @escaping () -> Void) {
+        if let pin = pin, let photos = pin.photos, photos.count == 0 {
+            let client = FlickrClient.sharedInstance()
+            client.search(by: pin.latitude, by: pin.longitude) { (photosArray) in
+                performUpdatesOnMain {
+                    self.photoURLs = [URL]()
+                    for photo in photosArray {
+                        self.photoURLs?.append(photo.url)
+                    }
+                    completion()
+                }
+            }
+        }
     }
     
     func addAnnotationToMapView(completion: (() -> Void)?) {
@@ -52,18 +67,45 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
     }
     
     // MARK: UICollectionViewDataSource
-    // MARK: UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if let fc = fetchedResultsController {
-            return fc.sections![section].numberOfObjects
+
+        if let pin = pin, let photos = pin.photos, photos.count > 0 {
+            return photos.count
         } else {
-            return 0
+            return 10
         }
     }
-    
+ 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        let cell = PhotoCollectionViewCell()
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCollectionCell", for: indexPath) as! PhotoCollectionViewCell
+        if let pin = pin, let photos = pin.photos, photos.count > 0 {
+            let photo = photos[indexPath.row] as! Photo
+            cell.imageView.image = UIImage(data: photo.data as! Data)
+        } else {
+            setPhotoUrls {
+                let flickrClient = FlickrClient.sharedInstance()
+                guard let photoURLs = self.photoURLs, photoURLs.count >= 10 else {
+                    fatalError("No photosURLs found!")
+                }
+                let url = photoURLs[indexPath.row]
+                flickrClient.getPhoto(from: url) { (data, error) in
+                    guard error == nil else {
+                        fatalError("Error found: \(error)")
+                    }
+                    guard let data = data else {
+                        fatalError("No Data returned!")
+                    }
+                    
+                    guard let image = UIImage(data: data) else {
+                        fatalError("Unable to convert data to image")
+                    }
+                    cell.activityIndicator.stopAnimating()
+                    cell.imageView.image = image
+                    
+                    //let photo = Photo(data: data as NSData, pin: self.pin!, title: nil, url: url.absoluteString, insertInto: self.pin!.managedObjectContext!)
+                }
+            }
+        }
         return cell
     }
     

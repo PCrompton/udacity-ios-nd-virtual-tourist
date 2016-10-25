@@ -85,6 +85,13 @@ struct CoreDataStack {
         }
     }
     
+    func safeSaveContext() {
+        do {
+            try saveContext()
+        } catch {
+            print("Unable to save context")
+        }
+    }
     func autoSave(delayInSeconds : Int){
         
         if delayInSeconds > 0 {

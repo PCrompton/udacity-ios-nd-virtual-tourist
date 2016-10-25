@@ -38,11 +38,7 @@ class TravelLocationsMapViewController: CoreDataViewController, MKMapViewDelegat
             let coordinate = mapView.convert(touchPoint, toCoordinateFrom: mapView)
             let pin = Pin(with: coordinate, insertInto: stack.context)
             mapView.addAnnotation(pin.annotation)
-            do {
-                try stack.saveContext()
-            } catch {
-                fatalError("Failed to save context!")
-            }
+            stack.safeSaveContext()
         }
     }
     
@@ -66,8 +62,7 @@ class TravelLocationsMapViewController: CoreDataViewController, MKMapViewDelegat
         let photoAlbumVC = storyboard?.instantiateViewController(withIdentifier: "PhotoAlbumViewController") as! PhotoAlbumViewController
         if let annotation = view.annotation as? PointAnnotation {
             photoAlbumVC.pin = annotation.pin
-            show(photoAlbumVC, sender: self)
+            self.show(photoAlbumVC, sender: self)
         }
-        
     }
 }

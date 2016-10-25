@@ -2,4 +2,54 @@
 <Bucket
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Virtual Tourist/Photo+CoreDataClass.swift"
+            timestampString = "499058867.130991"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "14"
+            endingLineNumber = "14"
+            landmarkName = "init(data:pin:title:url:insertInto:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Virtual_Tourist.Photo.init (data : __ObjC.NSData, pin : Virtual_Tourist.Pin, title : Swift.Optional&lt;Swift.String&gt;, url : Swift.Optional&lt;Swift.String&gt;, insertInto : __ObjC.NSManagedObjectContext) -&gt; Virtual_Tourist.Photo"
+                  moduleName = "Virtual Tourist"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/work/Documents/Development/iOS%20Nanodegree/iOS%20Portfolio%20Apps/Virtual%20Tourist/Virtual%20Tourist/Photo+CoreDataClass.swift"
+                  timestampString = "499097259.582441"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "15"
+                  endingLineNumber = "15"
+                  offsetFromSymbolStart = "112">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Virtual_Tourist.Photo.__allocating_init (data : __ObjC.NSData, pin : Virtual_Tourist.Pin, title : Swift.Optional&lt;Swift.String&gt;, url : Swift.Optional&lt;Swift.String&gt;, insertInto : __ObjC.NSManagedObjectContext) -&gt; Virtual_Tourist.Photo"
+                  moduleName = "Virtual Tourist"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/work/Documents/Development/iOS%20Nanodegree/iOS%20Portfolio%20Apps/Virtual%20Tourist/Virtual%20Tourist/Photo+CoreDataClass.swift"
+                  timestampString = "499097259.586099"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0"
+                  offsetFromSymbolStart = "64">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>
