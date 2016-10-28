@@ -30,6 +30,10 @@ class TravelLocationsMapViewController: CoreDataViewController, MKMapViewDelegat
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+    }
+    
     @IBAction func editButton(_ sender: AnyObject) {
     }
     @IBAction func handleLongPress(_ recognizer: UILongPressGestureRecognizer) {
