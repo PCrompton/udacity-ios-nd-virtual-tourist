@@ -79,9 +79,12 @@ struct CoreDataStack {
     }
 
     // MARK:  - Save
-    func saveContext() throws{
+    func saveContext() throws {
         if context.hasChanges {
             try context.save()
+            print("Successfully saved context")
+        } else {
+            print("no changes to context")
         }
     }
     
@@ -90,26 +93,6 @@ struct CoreDataStack {
             try saveContext()
         } catch {
             print("Unable to save context")
-        }
-    }
-    func autoSave(delayInSeconds : Int){
-        
-        if delayInSeconds > 0 {
-            do{
-                try saveContext()
-                print("Autosaving")
-            }catch{
-                print("Error while autosaving")
-            }
-            
-            let delayInNanoSeconds = UInt64(delayInSeconds) * NSEC_PER_SEC
-            let time = DispatchTime(uptimeNanoseconds: delayInNanoSeconds)
-
-            DispatchQueue.main.asyncAfter(deadline: time, execute: { 
-                self.autoSave(delayInSeconds: delayInSeconds)
-            })
-  
-            
         }
     }
 }

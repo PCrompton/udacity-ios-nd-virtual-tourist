@@ -19,7 +19,7 @@ class FlickrClient: SuperClient {
         return Singleton.sharedInstance
     }
     
-    func search(by latitude: Double, by longitude: Double, completion: ((_ photos: [Photo]) -> Void)?) {
+    func search(by latitude: Double, by longitude: Double, completion: ((_ photos: [PhotoMeta]) -> Void)?) {
         let methodParameters = [
             Constants.ParameterKeys.Method: Constants.ParameterValues.SearchMethod,
             Constants.ParameterKeys.APIKey: Constants.ParameterValues.APIKey,
@@ -36,7 +36,7 @@ class FlickrClient: SuperClient {
         }
     }
     
-    func getPhotos(with methodParameters: [String: Any], completion: ((_ photos: [Photo]) -> Void)?) {
+    func getPhotos(with methodParameters: [String: Any], completion: ((_ photos: [PhotoMeta]) -> Void)?) {
         let url = getURL(for: Constants.urlComponents, with: nil, with: methodParameters)
         print(url.absoluteString)
         let request = createRequest(for: url, as: HTTPMethod.get, with: nil, with: nil)
@@ -62,7 +62,7 @@ class FlickrClient: SuperClient {
                     fatalError("Cannot find key '\(Constants.ResponseKeys.Photo)' in \(photosDictionary)")
                 }
                 
-                var photosArray = [Photo]()
+                var photosArray = [PhotoMeta]()
                 for photo in photos {
                     
                     guard let title = photo[Constants.ResponseKeys.Title] as? String else {
@@ -77,7 +77,7 @@ class FlickrClient: SuperClient {
                         fatalError("Cannot convert '\(urlString) to type URL")
                     }
                     
-                    photosArray.append(Photo(url: url, title: title))
+                    photosArray.append(PhotoMeta(url: url, title: title))
                 }
                 completion?(photosArray)
             }
@@ -110,7 +110,7 @@ class FlickrClient: SuperClient {
 }
 
 extension FlickrClient {
-    struct Photo {
+    struct PhotoMeta {
         let url: URL
         let title: String
     }

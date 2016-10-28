@@ -14,14 +14,20 @@ public class Photo: NSManagedObject {
     
     var image: UIImage? {
         get {
-            return UIImage(data: self.data as! Data)
+            if let data = data {
+               return UIImage(data: data as Data)
+            } else {
+                return nil
+            }
         }
     }
     
-    convenience init(with data: NSData, insertInto context: NSManagedObjectContext) {
+    convenience init(with url: String?, pin: Pin?, title: String?, insertInto context: NSManagedObjectContext) {
         if let ent = NSEntityDescription.entity(forEntityName: "Photo", in: context) {
             self.init(entity: ent, insertInto: context)
-            self.data = data
+            self.url = url
+            self.pin = pin
+            self.title = title
         } else {
             fatalError("Unable to find Entity name!")
         }

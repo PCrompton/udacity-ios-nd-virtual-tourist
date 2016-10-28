@@ -26,7 +26,7 @@ class CoreDataViewController: UIViewController, NSFetchedResultsControllerDelega
         super.init(coder: aDecoder)
     }
     
-    func executeSearch(){
+    func executeSearch() {
         if let fc = fetchedResultsController {
             do {
                 try fc.performFetch()

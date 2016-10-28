@@ -38,6 +38,7 @@ class TravelLocationsMapViewController: CoreDataViewController, MKMapViewDelegat
             let coordinate = mapView.convert(touchPoint, toCoordinateFrom: mapView)
             let pin = Pin(with: coordinate, insertInto: stack.context)
             mapView.addAnnotation(pin.annotation)
+            print("save pin")
             stack.safeSaveContext()
         }
     }

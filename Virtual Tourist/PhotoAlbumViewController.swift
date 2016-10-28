@@ -16,7 +16,8 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
     @IBOutlet weak var photoCollectionView: UICollectionView!
     
     var pin: Pin?
-    var photoURLs: [URL]?
+    var photos = [Photo]()
+    let maxPhotos: Int = 10
    
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,20 +32,73 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequst, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
         fetchedResultsController?.delegate = self
         executeSearch()
+        if let numSavedPhotos = fetchedResultsController?.fetchedObjects?.count {
+            
+            if numSavedPhotos != maxPhotos {
+                setPhotos() {
+                    performUpdatesOnMain {
+                        print("set photos")
+                        self.stack.safeSaveContext()
+                        self.photoCollectionView.reloadData()
+                    }
+                }
+            } else {
+                for item in fetchedResultsController!.fetchedObjects! {
+                    if let photo = item as? Photo {
+                        photos.append(photo)
+                    }
+                }
+                photoCollectionView.reloadData()
+            }
+        }
     }
     
-    func setPhotoUrls(completion: @escaping () -> Void) {
-        if let pin = pin, let photos = pin.photos, photos.count == 0 {
+    func setPhotos(completion: (() -> Void)?) {
+        if let pin = pin {
             let client = FlickrClient.sharedInstance()
             client.search(by: pin.latitude, by: pin.longitude) { (photosArray) in
                 performUpdatesOnMain {
-                    self.photoURLs = [URL]()
-                    for photo in photosArray {
-                        self.photoURLs?.append(photo.url)
+                    for photoMeta in photosArray {
+                        if self.photos.count >= self.maxPhotos {
+                            break
+                        }
+                        let photo = self.createPhoto(from: photoMeta)
+                        self.photos.append(photo)
                     }
-                    completion()
+                    completion?()
                 }
             }
+        }
+    }
+    
+    func createPhoto(from meta: FlickrClient.PhotoMeta) -> Photo {
+        return Photo(with: meta.url.absoluteString, pin: pin!, title: meta.title, insertInto: stack.context)
+    }
+    
+    func downloadPhoto(photo: Photo, completion: (() -> Void)?) {
+        let flickrClient = FlickrClient.sharedInstance()
+        guard let urlString = photo.url else {
+            fatalError("No urlString found")
+        }
+        guard let url = URL(string: urlString) else {
+            fatalError("Unable to convert \(urlString) to URL")
+        }
+        flickrClient.getPhoto(from: url) { (data, error) in
+            
+            guard error == nil else {
+                fatalError("Error found while downloading photo: \(error)")
+            }
+            
+            guard let data = data else {
+                fatalError("No data found")
+            }
+            
+            photo.data = data as NSData?
+            
+            guard (photo.image != nil) else {
+                fatalError("no image found")
+            }
+            completion?()
         }
     }
     
@@ -78,52 +132,29 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
     
     // MARK: UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-
-        if let pin = pin, let photos = pin.photos, photos.count > 0 {
-            return photos.count
-        } else {
-            return 10
-        }
+        return photos.count
     }
  
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCollectionCell", for: indexPath) as! PhotoCollectionViewCell
-        if let pin = pin, let photos = pin.photos, photos.count > 0 {
-            let photo = fetchedResultsController?.object(at: indexPath) as! Photo
-            cell.activityIndicator.stopAnimating()
-            cell.imageView.image = photo.image
+        
+        let photo = photos[indexPath.item]
+        if let image = photo.image {
+            print("persisted photo")
+            cell.imageView.image = image
         } else {
-            setPhotoUrls {
-                let flickrClient = FlickrClient.sharedInstance()
-                guard let photoURLs = self.photoURLs, photoURLs.count >= 10 else {
-                    fatalError("No photosURLs found!")
-                }
-                let url = photoURLs[indexPath.row]
-                flickrClient.getPhoto(from: url) { (data, error) in
-                    guard error == nil else {
-                        fatalError("Error found: \(error)")
-                    }
-                    guard let data = data else {
-                        fatalError("No Data returned!")
-                    }
-                    guard let image = UIImage(data: data) else {
-                        fatalError("Unable to Convert data to UIImage: \(data)")
-                    }
+            print("downloading photo...")
+            cell.activityIndicator.startAnimating()
+            downloadPhoto(photo: photo) {
+                performUpdatesOnMain {
+                    print("Cell for item at index path")
+                    self.stack.safeSaveContext()
                     cell.activityIndicator.stopAnimating()
-                    cell.imageView.image = image
-                    self.savePhoto(data: data, url: url)
+                    cell.imageView.image = photo.image
                 }
             }
         }
         return cell
-    }
-    
-    func savePhoto(data: Data, url: URL) {
-        print("Will Instantiate Photo")
-        let photo = Photo(with: data as NSData, insertInto: stack.context)
-        photo.pin = pin
-        photo.url = url.absoluteString
-        stack.safeSaveContext()
     }
     
     // MARK: UICollectionViewDelegate
@@ -140,7 +171,7 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
         return true
     }
     
-    
+
     // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
     func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
         return false
