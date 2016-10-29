@@ -26,36 +26,14 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         configureFlowLayout(viewWidth: self.view.frame.width, viewHeight: self.view.frame.height)
         
         addAnnotationToMapView(completion: nil)
         
-        let fetchRequst = NSFetchRequest<NSManagedObject>(entityName: "Photo")
-        fetchRequst.sortDescriptors = [NSSortDescriptor(key: "data", ascending: true)]
-        if let pin = self.pin {
-            let predicate = NSPredicate(format: "pin = %@", argumentArray: [pin])
-            fetchRequst.predicate = predicate
-        }
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequst, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
-        fetchedResultsController?.delegate = self
-        executeSearch()
-        if let numSavedPhotos = fetchedResultsController?.fetchedObjects?.count {
-            
-            if numSavedPhotos != maxPhotos {
-                setPhotos() {
-                    performUpdatesOnMain {
-                        print("set photos")
-                        self.stack.safeSaveContext()
-                        self.photoCollectionView.reloadData()
-                    }
-                }
-            } else {
-                for item in fetchedResultsController!.fetchedObjects! {
-                    if let photo = item as? Photo {
-                        photos.append(photo)
-                    }
-                }
-                photoCollectionView.reloadData()
+        fetchStoredPhotos() {
+            performUpdatesOnMain {
+                self.photoCollectionView.reloadData()
             }
         }
     }
@@ -79,6 +57,38 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
         flowLayout.minimumLineSpacing = spaceBetweenItems
         flowLayout.itemSize = CGSize(width: dimension, height: dimension)
         
+    }
+    
+    func fetchStoredPhotos(completion: (() -> Void)?) {
+        
+        let fetchRequst = NSFetchRequest<NSManagedObject>(entityName: "Photo")
+        fetchRequst.sortDescriptors = [NSSortDescriptor(key: "data", ascending: true)]
+        if let pin = self.pin {
+            let predicate = NSPredicate(format: "pin = %@", argumentArray: [pin])
+            fetchRequst.predicate = predicate
+        }
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequst, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
+        fetchedResultsController?.delegate = self
+        executeSearch()
+        if let numSavedPhotos = fetchedResultsController?.fetchedObjects?.count {
+            
+            if numSavedPhotos == 0 {
+                setPhotos() {
+                    performUpdatesOnMain {
+                        print("set photos")
+                        self.stack.safeSaveContext()
+                        completion?()
+                    }
+                }
+            } else {
+                for item in fetchedResultsController!.fetchedObjects! {
+                    if let photo = item as? Photo {
+                        photos.append(photo)
+                    }
+                }
+                completion?()
+            }
+        }
     }
     
     func setPhotos(completion: (() -> Void)?) {
@@ -156,6 +166,13 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
     }
     
     @IBAction func newCollectionButton(_ sender: AnyObject) {
+        photos.removeAll()
+        setPhotos {
+            performUpdatesOnMain {
+                self.stack.safeSaveContext()
+                self.photoCollectionView.reloadData()
+            }
+        }
     }
     
     // MARK: UICollectionViewDataSource
