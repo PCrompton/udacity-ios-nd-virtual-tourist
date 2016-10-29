@@ -12,15 +12,22 @@ import MapKit
 
 class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate {
 
+    @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var photoCollectionView: UICollectionView!
     
     var pin: Pin?
     var photos = [Photo]()
-    let maxPhotos: Int = 10
+    let maxPhotos: Int = 24
    
+    let itemsPerRowInPortrait = 3
+    let itemsPerRowInLandscape = 6
+    let spaceBetweenItems: CGFloat = 3.0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureFlowLayout(viewWidth: self.view.frame.width, viewHeight: self.view.frame.height)
+        
         addAnnotationToMapView(completion: nil)
         
         let fetchRequst = NSFetchRequest<NSManagedObject>(entityName: "Photo")
@@ -51,6 +58,27 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
                 photoCollectionView.reloadData()
             }
         }
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        let newWidth = self.view.frame.height
+        let newHeight = self.view.frame.width
+        configureFlowLayout(viewWidth: newWidth, viewHeight: newHeight)
+        
+    }
+    
+    func configureFlowLayout(viewWidth width: CGFloat, viewHeight height: CGFloat) {
+        let numPerRow: Int
+        if width < height {
+            numPerRow = itemsPerRowInPortrait
+        } else {
+            numPerRow = itemsPerRowInLandscape
+        }
+        let dimension = (width - (CGFloat(numPerRow-1) * spaceBetweenItems)) / CGFloat(numPerRow)
+        flowLayout.minimumInteritemSpacing = spaceBetweenItems
+        flowLayout.minimumLineSpacing = spaceBetweenItems
+        flowLayout.itemSize = CGSize(width: dimension, height: dimension)
+        
     }
     
     func setPhotos(completion: (() -> Void)?) {
@@ -137,7 +165,7 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
  
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCollectionCell", for: indexPath) as! PhotoCollectionViewCell
-        
+    
         let photo = photos[indexPath.item]
         if let image = photo.image {
             print("persisted photo")

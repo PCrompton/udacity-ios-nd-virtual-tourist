@@ -116,8 +116,8 @@
                                     <constraint firstItem="JUw-VT-a0C" firstAttribute="centerX" secondItem="3kk-4V-mZD" secondAttribute="centerX" id="Krs-0x-0EX"/>
                                     <constraint firstItem="dQi-g6-548" firstAttribute="centerX" secondItem="JUw-VT-a0C" secondAttribute="centerX" id="MB5-XM-cdX"/>
                                     <constraint firstItem="JUw-VT-a0C" firstAttribute="top" secondItem="3kk-4V-mZD" secondAttribute="top" id="Ujv-YC-e4y"/>
-                                    <constraint firstItem="JUw-VT-a0C" firstAttribute="height" secondItem="3kk-4V-mZD" secondAttribute="height" multiplier="0.25" id="dx3-qB-T2p"/>
                                     <constraint firstItem="dQi-g6-548" firstAttribute="top" secondItem="JUw-VT-a0C" secondAttribute="bottom" id="i12-0n-gl0"/>
+                                    <constraint firstItem="JUw-VT-a0C" firstAttribute="height" secondItem="3kk-4V-mZD" secondAttribute="height" multiplier="1/4" id="x7o-xZ-bme"/>
                                 </constraints>
                             </stackView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="v3o-Vb-mVK">
@@ -141,12 +141,13 @@
                             <constraint firstItem="89X-AR-N0f" firstAttribute="top" secondItem="v3o-Vb-mVK" secondAttribute="bottom" id="Cxp-RV-Ldd"/>
                             <constraint firstItem="v3o-Vb-mVK" firstAttribute="width" secondItem="J9Y-X6-POJ" secondAttribute="width" id="G5D-NS-OqQ"/>
                             <constraint firstItem="3kk-4V-mZD" firstAttribute="centerX" secondItem="J9Y-X6-POJ" secondAttribute="centerX" id="HAy-gh-ACj"/>
-                            <constraint firstItem="3kk-4V-mZD" firstAttribute="height" secondItem="J9Y-X6-POJ" secondAttribute="height" id="Inf-Pb-46S"/>
+                            <constraint firstItem="v3o-Vb-mVK" firstAttribute="top" secondItem="3kk-4V-mZD" secondAttribute="bottom" id="OWJ-Ya-9lS"/>
                             <constraint firstItem="v3o-Vb-mVK" firstAttribute="centerX" secondItem="J9Y-X6-POJ" secondAttribute="centerX" id="RsZ-hV-Wmi"/>
                             <constraint firstItem="3kk-4V-mZD" firstAttribute="top" secondItem="Arm-bE-XIM" secondAttribute="bottom" id="UOW-mH-9i8"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="flowLayout" destination="dc8-38-a1U" id="UrC-0i-7nv"/>
                         <outlet property="mapView" destination="JUw-VT-a0C" id="fng-Bh-52w"/>
                         <outlet property="photoCollectionView" destination="dQi-g6-548" id="gb6-Eg-jAS"/>
                     </connections>
