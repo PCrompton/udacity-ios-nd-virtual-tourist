@@ -13,6 +13,7 @@ import MapKit
 class TravelLocationsMapViewController: CoreDataViewController, MKMapViewDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var editIndicator: UILabel!
     
     override func viewDidLoad() {
         title = "Virtual Tourist"
@@ -35,7 +36,9 @@ class TravelLocationsMapViewController: CoreDataViewController, MKMapViewDelegat
     }
     
     @IBAction func editButton(_ sender: AnyObject) {
+        editIndicator.isHidden = !editIndicator.isHidden
     }
+    
     @IBAction func handleLongPress(_ recognizer: UILongPressGestureRecognizer) {
         if recognizer.state == UIGestureRecognizerState.began {
             let touchPoint = recognizer.location(in: mapView)

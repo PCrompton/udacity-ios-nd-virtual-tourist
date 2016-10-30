@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="IWa-JJ-yAO">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2555" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="IWa-JJ-yAO">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -20,20 +23,34 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="tri-PN-VcS">
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <gestureRecognizers/>
                                 <connections>
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="n6E-Yu-QKB"/>
                                     <outletCollection property="gestureRecognizers" destination="jEG-B1-q8y" appends="YES" id="S0c-IH-DHP"/>
                                 </connections>
                             </mapView>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap Pins to Delete" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xse-VE-Bb8">
+                                <rect key="frame" x="0.0" y="619" width="375" height="48"/>
+                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="48" id="p2W-7e-yfR"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="tri-PN-VcS" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="6Wx-du-0uW"/>
-                            <constraint firstItem="tri-PN-VcS" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="MpA-bj-P6g"/>
-                            <constraint firstItem="tri-PN-VcS" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="32" id="XEc-sW-7dJ"/>
-                            <constraint firstItem="tri-PN-VcS" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="ndR-02-CWc"/>
+                            <constraint firstItem="Xse-VE-Bb8" firstAttribute="bottom" secondItem="wfy-db-euE" secondAttribute="top" id="9ta-2n-2bA"/>
+                            <constraint firstItem="tri-PN-VcS" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="BKU-1s-O41"/>
+                            <constraint firstItem="tri-PN-VcS" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="XOh-k1-oxB"/>
+                            <constraint firstItem="Xse-VE-Bb8" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="d1B-tW-982"/>
+                            <constraint firstItem="tri-PN-VcS" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="fRH-4v-oOc"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="tri-PN-VcS" secondAttribute="bottom" id="h3o-Il-h1S"/>
+                            <constraint firstItem="Xse-VE-Bb8" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="pGT-4h-bgO"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Virtual Tourist" id="Y8p-Wm-pdd">
@@ -44,6 +61,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="editIndicator" destination="Xse-VE-Bb8" id="qk6-gJ-0sL"/>
                         <outlet property="mapView" destination="tri-PN-VcS" id="Cfx-Vf-9AR"/>
                     </connections>
                 </viewController>
@@ -69,9 +87,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="3kk-4V-mZD">
+                                <rect key="frame" x="0.0" y="20" width="375" height="603"/>
                                 <subviews>
-                                    <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="JUw-VT-a0C"/>
+                                    <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="JUw-VT-a0C">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="151"/>
+                                    </mapView>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="dQi-g6-548">
+                                        <rect key="frame" x="0.0" y="151" width="375" height="452"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="dc8-38-a1U">
                                             <size key="itemSize" width="136" height="136"/>
@@ -87,8 +109,12 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="136" height="136"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="del-Xl-nPF"/>
-                                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="seN-gg-mDN"/>
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="del-Xl-nPF">
+                                                            <rect key="frame" x="0.0" y="0.0" width="136" height="136"/>
+                                                        </imageView>
+                                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="seN-gg-mDN">
+                                                            <rect key="frame" x="58" y="58" width="20" height="20"/>
+                                                        </activityIndicatorView>
                                                     </subviews>
                                                 </view>
                                                 <constraints>
@@ -121,6 +147,7 @@
                                 </constraints>
                             </stackView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="v3o-Vb-mVK">
+                                <rect key="frame" x="0.0" y="623" width="375" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="cxi-tt-9e0"/>
                                 </constraints>
