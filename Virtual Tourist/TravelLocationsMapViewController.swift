@@ -19,16 +19,22 @@ class TravelLocationsMapViewController: CoreDataViewController, MKMapViewDelegat
         title = "Virtual Tourist"
         
         // Get the stack
+        fetchStoredPins { (fetchedPins) in
+            performUpdatesOnMain {
+                for pin in fetchedPins {
+                    self.mapView.addAnnotation(pin.annotation)
+                }
+            }
+        }
+    }
+    
+    func fetchStoredPins(completion: ((_ fetchedPins: [Pin]) -> Void)?) {
         let fetchRequst = NSFetchRequest<NSManagedObject>(entityName: "Pin")
         fetchRequst.sortDescriptors = [NSSortDescriptor(key: "page", ascending: true)]
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequst, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
         fetchedResultsController?.delegate = self
         executeSearch()
-        for object in fetchedResultsController!.fetchedObjects! {
-            if let pin = object as? Pin {
-                mapView.addAnnotation(pin.annotation)
-            }
-        }
+        completion?(fetchedResultsController?.fetchedObjects as! [Pin])
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -75,6 +81,8 @@ class TravelLocationsMapViewController: CoreDataViewController, MKMapViewDelegat
                 mapView.deselectAnnotation(annotation, animated: false)
             } else {
                 mapView.removeAnnotation(annotation)
+                stack.context.delete(annotation.pin)
+                stack.safeSaveContext()
             }
         }
     }
