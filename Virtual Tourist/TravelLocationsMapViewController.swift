@@ -30,7 +30,7 @@ class TravelLocationsMapViewController: CoreDataViewController, MKMapViewDelegat
     
     func fetchStoredPins(completion: ((_ fetchedPins: [Pin]) -> Void)?) {
         let fetchRequst = NSFetchRequest<NSManagedObject>(entityName: "Pin")
-        fetchRequst.sortDescriptors = [NSSortDescriptor(key: "page", ascending: true)]
+        fetchRequst.sortDescriptors = [NSSortDescriptor(key: "latitude", ascending: true)]
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequst, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
         fetchedResultsController?.delegate = self
         executeSearch()

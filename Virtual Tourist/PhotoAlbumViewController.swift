@@ -63,7 +63,7 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
     func fetchStoredPhotos(completion: (() -> Void)?) {
         photos.removeAll()
         let fetchRequst = NSFetchRequest<NSManagedObject>(entityName: "Photo")
-        fetchRequst.sortDescriptors = [NSSortDescriptor(key: "data", ascending: true)]
+        fetchRequst.sortDescriptors = [NSSortDescriptor(key: "index", ascending: true)]
         if let pin = self.pin {
             let predicate = NSPredicate(format: "pin = %@", argumentArray: [pin])
             fetchRequst.predicate = predicate
@@ -200,6 +200,7 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
     }
  
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        photos[indexPath.item].index = Int16(exactly: indexPath.item)!
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCollectionCell", for: indexPath) as! PhotoCollectionViewCell
         cell.imageView.alpha = 1.0
         let photo = photos[indexPath.item]
