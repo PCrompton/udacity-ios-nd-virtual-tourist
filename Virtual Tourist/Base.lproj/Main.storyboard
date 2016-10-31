@@ -155,7 +155,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="EtM-zB-5T0"/>
                                     <barButtonItem title="New Collection" id="gfO-fX-oed">
                                         <connections>
-                                            <action selector="newCollectionButton:" destination="5d2-3a-0xe" id="Nlb-Z6-DbA"/>
+                                            <action selector="tabBarButton:" destination="5d2-3a-0xe" id="PRl-Tc-MZN"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="Lrh-b7-j0x"/>
@@ -176,8 +176,8 @@
                     <connections>
                         <outlet property="flowLayout" destination="dc8-38-a1U" id="UrC-0i-7nv"/>
                         <outlet property="mapView" destination="JUw-VT-a0C" id="fng-Bh-52w"/>
-                        <outlet property="newCollectionButton" destination="gfO-fX-oed" id="Png-Ov-rh3"/>
                         <outlet property="photoCollectionView" destination="dQi-g6-548" id="gb6-Eg-jAS"/>
+                        <outlet property="tabBarButton" destination="gfO-fX-oed" id="biZ-Mk-qy7"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jyO-x6-Bke" userLabel="First Responder" sceneMemberID="firstResponder"/>

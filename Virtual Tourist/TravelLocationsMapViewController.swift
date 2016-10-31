@@ -37,10 +37,6 @@ class TravelLocationsMapViewController: CoreDataViewController, MKMapViewDelegat
         completion?(fetchedResultsController?.fetchedObjects as! [Pin])
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
-    }
-    
     @IBAction func editButton(_ sender: AnyObject) {
         editIndicator.isHidden = !editIndicator.isHidden
     }
@@ -56,6 +52,7 @@ class TravelLocationsMapViewController: CoreDataViewController, MKMapViewDelegat
         }
     }
     
+    // Mark: MKMapViewDelegate Functions
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         let reuseId = "pin"
         

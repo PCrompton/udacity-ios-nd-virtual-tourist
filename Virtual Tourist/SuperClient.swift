@@ -37,6 +37,7 @@ class SuperClient: NSObject {
         return components.url!
     }
     
+    // Mark: Functions
     func createAndRunTask(for request: URLRequest, with completion: @escaping (_ data: Data?, _ error: Error?) -> Void) {
         let session = URLSession.shared
         let task = session.dataTask(with: request) { (data, response, error) in

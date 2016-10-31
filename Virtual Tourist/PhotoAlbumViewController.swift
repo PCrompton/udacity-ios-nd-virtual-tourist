@@ -15,7 +15,7 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var photoCollectionView: UICollectionView!
-    @IBOutlet weak var newCollectionButton: UIBarButtonItem!
+    @IBOutlet weak var tabBarButton: UIBarButtonItem!
     
     var pin: Pin?
     var photos = [Photo]()
@@ -39,6 +39,7 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
         }
     }
     
+    // Mark: Layout Functions
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         let newWidth = self.view.frame.height
         let newHeight = self.view.frame.width
@@ -46,6 +47,7 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
         
     }
     
+    // Mark: Photo Management Functions
     func configureFlowLayout(viewWidth width: CGFloat, viewHeight height: CGFloat) {
         let numPerRow: Int
         if width < height {
@@ -164,6 +166,53 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
         }
     }
     
+    func updateButton() {
+        if photoCollectionView.indexPathsForSelectedItems?.count != 0 {
+            tabBarButton.title = "Delete Selected Photos"
+        } else {
+            tabBarButton.title = "New Collection"
+        }
+    }
+    
+    func deletePhotos() {
+        var photosToDelete = [Photo]()
+        for indexPath in photoCollectionView.indexPathsForSelectedItems! {
+            photosToDelete.append(photos[indexPath.item])
+        }
+        
+        for photo in photosToDelete {
+            stack.context.delete(photo)
+            photos.remove(at: photos.index(of: photo)!)
+        }
+        stack.safeSaveContext()
+        photoCollectionView.reloadData()
+        updateButton()
+    }
+    
+    func getNewCollection() {
+        stack.delete(objects: photos)
+        stack.safeSaveContext()
+        photos.removeAll()
+        pin?.set += 1
+        setPhotos {
+            performUpdatesOnMain {
+                self.stack.safeSaveContext()
+                self.photoCollectionView.reloadData()
+                
+                self.updateButton()
+            }
+        }
+    }
+    
+    @IBAction func tabBarButton(_ sender: AnyObject) {
+        if photoCollectionView.indexPathsForSelectedItems?.count != 0 {
+            deletePhotos()
+        } else {
+            getNewCollection()
+        }
+    }
+    
+    // Mark: Map Management Functions
     func addAnnotationToMapView(completion: (() -> Void)?) {
         
         if let annotation = pin?.annotation {
@@ -172,6 +221,7 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
         }
         completion?()
     }
+    
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         let reuseId = "pin"
@@ -187,38 +237,6 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
         }
         
         return pinView
-    }
-    
-    @IBAction func newCollectionButton(_ sender: AnyObject) {
-        if photoCollectionView.indexPathsForSelectedItems?.count != 0 {
-            var photosToDelete = [Photo]()
-            for indexPath in photoCollectionView.indexPathsForSelectedItems! {
-                photosToDelete.append(photos[indexPath.item])
-            }
-    
-            for photo in photosToDelete {
-                stack.context.delete(photo)
-                photos.remove(at: photos.index(of: photo)!)
-            }
-            stack.safeSaveContext()
-            photoCollectionView.reloadData()
-            updateButton()
-        
-
-        } else {
-            stack.delete(objects: photos)
-            stack.safeSaveContext()
-            photos.removeAll()
-            pin?.set += 1
-            setPhotos {
-                performUpdatesOnMain {
-                    self.stack.safeSaveContext()
-                    self.photoCollectionView.reloadData()
-                    
-                    self.updateButton()
-                }
-            }
-        }
     }
     
     // MARK: UICollectionViewDataSource
@@ -282,13 +300,5 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
         print(cell.isSelected)
         cell.imageView.alpha = 1.0
         updateButton()
-    }
-    
-    func updateButton() {
-       if photoCollectionView.indexPathsForSelectedItems?.count != 0 {
-            newCollectionButton.title = "Delete Selected Photos"
-       } else {
-            newCollectionButton.title = "New Collection"
-        }
     }
 }
