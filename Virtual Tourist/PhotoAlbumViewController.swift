@@ -183,7 +183,10 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
         
 
         } else {
+            stack.delete(objects: photos)
+            stack.safeSaveContext()
             photos.removeAll()
+            
             setPhotos {
                 performUpdatesOnMain {
                     self.stack.safeSaveContext()

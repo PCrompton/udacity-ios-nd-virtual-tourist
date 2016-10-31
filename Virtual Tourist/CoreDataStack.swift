@@ -80,6 +80,12 @@ struct CoreDataStack {
         
         try coordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: dbURL, options: nil)
     }
+    
+    func delete(objects: [NSManagedObject]) {
+        for object in objects {
+            context.delete(object)
+        }
+    }
 
     // MARK:  - Save
     func saveContext() throws {
