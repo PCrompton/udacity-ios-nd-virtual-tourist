@@ -51,8 +51,11 @@ struct CoreDataStack {
         
         self.dbURL = docUrl.appendingPathComponent("model.sqlite")
        
+        // Options for migration
+        let options = [NSInferMappingModelAutomaticallyOption: true, NSMigratePersistentStoresAutomaticallyOption: true]
+        
         do{
-            try addStoreCoordinator(storeType: NSSQLiteStoreType, configuration: nil, storeURL: dbURL as NSURL, options: nil)
+            try addStoreCoordinator(storeType: NSSQLiteStoreType, configuration: nil, storeURL: dbURL as NSURL, options: options)
             
         }catch{
             print("unable to add store at \(dbURL)")
