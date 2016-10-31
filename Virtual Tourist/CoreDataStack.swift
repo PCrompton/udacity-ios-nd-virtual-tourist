@@ -54,10 +54,10 @@ struct CoreDataStack {
         // Options for migration
         let options = [NSInferMappingModelAutomaticallyOption: true, NSMigratePersistentStoresAutomaticallyOption: true]
         
-        do{
-            try addStoreCoordinator(storeType: NSSQLiteStoreType, configuration: nil, storeURL: dbURL as NSURL, options: options)
+        do {
+            try addStoreCoordinator(storeType: NSSQLiteStoreType, configuration: nil, storeURL: dbURL, options: options)
             
-        }catch{
+        } catch{
             print("unable to add store at \(dbURL)")
         }
     }
@@ -65,8 +65,8 @@ struct CoreDataStack {
     // MARK:  - Utils
     func addStoreCoordinator(storeType: String,
                              configuration: String?,
-                             storeURL: NSURL,
-                             options : [NSObject : AnyObject]?) throws{
+                             storeURL: URL,
+                             options : [AnyHashable: Any]?) throws {
         
         try coordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: dbURL as URL, options: nil)
         
