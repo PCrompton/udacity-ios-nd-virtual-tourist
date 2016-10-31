@@ -101,6 +101,13 @@
                                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
+                                        <label key="backgroundView" hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Photos Found" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="cpr-3h-bNE">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="452"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="33"/>
+                                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                         <cells>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotoCollectionCell" id="kcQ-GI-Zxj" customClass="PhotoCollectionViewCell" customModule="Virtual_Tourist" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="136" height="136"/>
@@ -176,6 +183,7 @@
                     <connections>
                         <outlet property="flowLayout" destination="dc8-38-a1U" id="UrC-0i-7nv"/>
                         <outlet property="mapView" destination="JUw-VT-a0C" id="fng-Bh-52w"/>
+                        <outlet property="noPhotosFound" destination="cpr-3h-bNE" id="Flm-hb-Gi3"/>
                         <outlet property="photoCollectionView" destination="dQi-g6-548" id="gb6-Eg-jAS"/>
                         <outlet property="tabBarButton" destination="gfO-fX-oed" id="biZ-Mk-qy7"/>
                     </connections>

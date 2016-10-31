@@ -16,6 +16,7 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var photoCollectionView: UICollectionView!
     @IBOutlet weak var tabBarButton: UIBarButtonItem!
+    @IBOutlet weak var noPhotosFound: UILabel!
     
     var pin: Pin?
     var photos = [Photo]()
@@ -99,6 +100,7 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
     }
     
     func setPhotos(completion: (() -> Void)?) {
+        noPhotosFound.isHidden = true
         if let pin = pin {
             let client = FlickrClient.sharedInstance()
             client.search(by: pin.latitude, by: pin.longitude) { (photosArray) in
@@ -110,14 +112,21 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
                     }
                     let startIndex: Int
                         
-                    if self.pin!.set == 0 {
+                    if self.pin!.set == 0 || self.pin!.totalPhotos == 0 {
                         startIndex = photosArray.startIndex
                     } else {
                         startIndex = (self.maxPhotos * Int(self.pin!.set)) % Int(self.pin!.totalPhotos)
                     }
-                    self.creatPhotos(from: photosArray[startIndex...photosArray.endIndex-1])
-                    if self.photos.count < self.maxPhotos {
-                        self.creatPhotos(from: photosArray[photosArray.startIndex...photosArray.endIndex-1])
+                    
+                    if photosArray.count == 1 {
+                        self.photos.append(self.createPhoto(from: photosArray[0]))
+                    } else if photosArray.count > 1 {
+                        self.createPhotos(from: photosArray[startIndex...photosArray.endIndex-1])
+                        if self.photos.count < self.maxPhotos {
+                            self.createPhotos(from: photosArray[photosArray.startIndex...photosArray.endIndex-1])
+                        }
+                    } else if photosArray.count == 0 {
+                        self.noPhotosFound.isHidden = false
                     }
                     completion?()
                 }
@@ -125,7 +134,7 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
         }
     }
     
-    func creatPhotos(from metaArray: ArraySlice<FlickrClient.PhotoMeta>) {
+    func createPhotos(from metaArray: ArraySlice<FlickrClient.PhotoMeta>) {
         for photoMeta in metaArray {
             if self.photos.count >= self.maxPhotos {
                 break
