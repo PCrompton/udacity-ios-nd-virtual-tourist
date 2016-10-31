@@ -109,7 +109,7 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="136" height="136"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="del-Xl-nPF">
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="del-Xl-nPF">
                                                             <rect key="frame" x="0.0" y="0.0" width="136" height="136"/>
                                                         </imageView>
                                                         <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="seN-gg-mDN">
@@ -176,6 +176,7 @@
                     <connections>
                         <outlet property="flowLayout" destination="dc8-38-a1U" id="UrC-0i-7nv"/>
                         <outlet property="mapView" destination="JUw-VT-a0C" id="fng-Bh-52w"/>
+                        <outlet property="newCollectionButton" destination="gfO-fX-oed" id="Png-Ov-rh3"/>
                         <outlet property="photoCollectionView" destination="dQi-g6-548" id="gb6-Eg-jAS"/>
                     </connections>
                 </viewController>

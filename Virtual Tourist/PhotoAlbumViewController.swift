@@ -15,6 +15,7 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var photoCollectionView: UICollectionView!
+    @IBOutlet weak var newCollectionButton: UIBarButtonItem!
     
     var pin: Pin?
     var photos = [Photo]()
@@ -26,7 +27,7 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        photoCollectionView.allowsMultipleSelection = true
         configureFlowLayout(viewWidth: self.view.frame.width, viewHeight: self.view.frame.height)
         
         addAnnotationToMapView(completion: nil)
@@ -60,7 +61,7 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
     }
     
     func fetchStoredPhotos(completion: (() -> Void)?) {
-        
+        photos.removeAll()
         let fetchRequst = NSFetchRequest<NSManagedObject>(entityName: "Photo")
         fetchRequst.sortDescriptors = [NSSortDescriptor(key: "data", ascending: true)]
         if let pin = self.pin {
@@ -166,11 +167,29 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
     }
     
     @IBAction func newCollectionButton(_ sender: AnyObject) {
-        photos.removeAll()
-        setPhotos {
-            performUpdatesOnMain {
-                self.stack.safeSaveContext()
-                self.photoCollectionView.reloadData()
+        if photoCollectionView.indexPathsForSelectedItems?.count != 0 {
+            var photosToDelete = [Photo]()
+            for indexPath in photoCollectionView.indexPathsForSelectedItems! {
+                photosToDelete.append(photos[indexPath.item])
+            }
+    
+            for photo in photosToDelete {
+                stack.context.delete(photo)
+                photos.remove(at: photos.index(of: photo)!)
+            }
+            stack.safeSaveContext()
+            photoCollectionView.reloadData()
+            updateButton()
+        
+
+        } else {
+            photos.removeAll()
+            setPhotos {
+                performUpdatesOnMain {
+                    self.stack.safeSaveContext()
+                    self.photoCollectionView.reloadData()
+                    self.updateButton()
+                }
             }
         }
     }
@@ -182,7 +201,7 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
  
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCollectionCell", for: indexPath) as! PhotoCollectionViewCell
-    
+        cell.imageView.alpha = 1.0
         let photo = photos[indexPath.item]
         if let image = photo.image {
             print("persisted photo")
@@ -203,30 +222,45 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
     }
     
     // MARK: UICollectionViewDelegate
-    
-    
-    // Uncomment this method to specify if the specified item should be highlighted during tracking
-    func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    
-    
-    // Uncomment this method to specify if the specified item should be selected
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return true
+        let cell = photoCollectionView.cellForItem(at: indexPath) as! PhotoCollectionViewCell
+        print(cell.isSelected)
+        if cell.isSelected {
+            return false
+        } else {
+            return true
+        }
     }
     
-
-    // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
-    func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
-        return false
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    
+        let cell = photoCollectionView.cellForItem(at: indexPath) as! PhotoCollectionViewCell
+        print(cell.isSelected)
+        cell.imageView.alpha = 0.5
+        updateButton()
     }
     
-    func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-        return false
+    func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
+        let cell = photoCollectionView.cellForItem(at: indexPath) as! PhotoCollectionViewCell
+        if cell.isSelected {
+            return true
+        } else {
+            return false
+        }
     }
     
-    func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
-        
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        let cell = photoCollectionView.cellForItem(at: indexPath) as! PhotoCollectionViewCell
+        print(cell.isSelected)
+        cell.imageView.alpha = 1.0
+        updateButton()
+    }
+    
+    func updateButton() {
+       if photoCollectionView.indexPathsForSelectedItems?.count != 0 {
+            newCollectionButton.title = "Delete Selected Photos"
+       } else {
+            newCollectionButton.title = "New Collection"
+        }
     }
 }
