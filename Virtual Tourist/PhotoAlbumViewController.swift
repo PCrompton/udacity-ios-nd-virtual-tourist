@@ -60,7 +60,7 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
         
     }
     
-    func fetchStoredPhotos(completion: (() -> Void)?) {
+    func setFetchedResultsController() {
         photos.removeAll()
         let fetchRequst = NSFetchRequest<NSManagedObject>(entityName: "Photo")
         fetchRequst.sortDescriptors = [NSSortDescriptor(key: "index", ascending: true)]
@@ -71,8 +71,12 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequst, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
         fetchedResultsController?.delegate = self
         executeSearch()
+
+    }
+    
+    func fetchStoredPhotos(completion: (() -> Void)?) {
+        setFetchedResultsController()
         if let numSavedPhotos = fetchedResultsController?.fetchedObjects?.count {
-            
             if numSavedPhotos == 0 {
                 setPhotos() {
                     performUpdatesOnMain {
@@ -97,16 +101,35 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
             let client = FlickrClient.sharedInstance()
             client.search(by: pin.latitude, by: pin.longitude) { (photosArray) in
                 performUpdatesOnMain {
-                    for photoMeta in photosArray {
-                        if self.photos.count >= self.maxPhotos {
-                            break
-                        }
-                        let photo = self.createPhoto(from: photoMeta)
-                        self.photos.append(photo)
+                    if let totalPhotos = Int16(exactly: photosArray.count) {
+                        self.pin?.totalPhotos = totalPhotos
+                    } else {
+                        self.pin?.totalPhotos = 0
+                    }
+                    let startIndex: Int
+                        
+                    if self.pin!.set == 0 {
+                        startIndex = photosArray.startIndex
+                    } else {
+                        startIndex = (self.maxPhotos * Int(self.pin!.set)) % Int(self.pin!.totalPhotos)
+                    }
+                    self.creatPhotos(from: photosArray[startIndex...photosArray.endIndex-1])
+                    if self.photos.count < self.maxPhotos {
+                        self.creatPhotos(from: photosArray[photosArray.startIndex...photosArray.endIndex-1])
                     }
                     completion?()
                 }
             }
+        }
+    }
+    
+    func creatPhotos(from metaArray: ArraySlice<FlickrClient.PhotoMeta>) {
+        for photoMeta in metaArray {
+            if self.photos.count >= self.maxPhotos {
+                break
+            }
+            let photo = self.createPhoto(from: photoMeta)
+            self.photos.append(photo)
         }
     }
     
@@ -186,11 +209,12 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
             stack.delete(objects: photos)
             stack.safeSaveContext()
             photos.removeAll()
-            
+            pin?.set += 1
             setPhotos {
                 performUpdatesOnMain {
                     self.stack.safeSaveContext()
                     self.photoCollectionView.reloadData()
+                    
                     self.updateButton()
                 }
             }

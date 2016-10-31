@@ -27,6 +27,7 @@ public class Pin: NSManagedObject {
             self.coordinate = coordinate
             self.latitude = coordinate.latitude
             self.longitude = coordinate.longitude
+            self.set = 0
         } else {
             fatalError("Unable to find Entity name!")
         }
