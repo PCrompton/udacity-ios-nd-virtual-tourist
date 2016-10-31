@@ -122,7 +122,7 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
                         self.photos.append(self.createPhoto(from: photosArray[0]))
                     } else if photosArray.count > 1 {
                         self.createPhotos(from: photosArray[startIndex...photosArray.endIndex-1])
-                        if self.photos.count < self.maxPhotos {
+                        if self.photos.count < self.maxPhotos && photosArray.count >= self.maxPhotos {
                             self.createPhotos(from: photosArray[photosArray.startIndex...photosArray.endIndex-1])
                         }
                     } else if photosArray.count == 0 {
