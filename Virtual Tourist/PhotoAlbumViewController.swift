@@ -83,7 +83,6 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
             if numSavedPhotos == 0 {
                 setPhotos() {
                     performUpdatesOnMain {
-                        print("set photos")
                         self.stack.safeSaveContext()
                         completion?()
                     }
@@ -103,7 +102,11 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
         noPhotosFound.isHidden = true
         if let pin = pin {
             let client = FlickrClient.sharedInstance()
-            client.search(by: pin.latitude, by: pin.longitude) { (photosArray) in
+            client.search(by: pin.latitude, by: pin.longitude) { (photosArray, error) in
+                guard let photosArray = photosArray else {
+                    self.presentError(title: "Unable to download photos", errorMessage: error!.localizedDescription)
+                    return
+                }
                 performUpdatesOnMain {
                     if let totalPhotos = Int16(exactly: photosArray.count) {
                         self.pin?.totalPhotos = totalPhotos
@@ -158,8 +161,9 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
         }
         flickrClient.getPhoto(from: url) { (data, error) in
             
-            guard error == nil else {
-                fatalError("Error found while downloading photo: \(error)")
+            if let error = error {
+                self.presentError(title: "Error downloading photos", errorMessage: error.localizedDescription)
+                return
             }
             
             guard let data = data else {

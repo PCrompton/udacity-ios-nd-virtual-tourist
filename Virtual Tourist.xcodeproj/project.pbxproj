@@ -28,6 +28,7 @@
 		9680E9B41DBD53C8006EAC53 /* Photo+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9680E9B01DBD53C8006EAC53 /* Photo+CoreDataProperties.swift */; };
 		9680E9BB1DBD9FE3006EAC53 /* CoreDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9680E9BA1DBD9FE3006EAC53 /* CoreDataViewController.swift */; };
 		9680E9C31DBEDEF0006EAC53 /* PointAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9680E9C21DBEDEF0006EAC53 /* PointAnnotation.swift */; };
+		96940E071DC9135200F62002 /* UIViewController+TaskError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96940E061DC9135200F62002 /* UIViewController+TaskError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +76,7 @@
 		9680E9B01DBD53C8006EAC53 /* Photo+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		9680E9BA1DBD9FE3006EAC53 /* CoreDataViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataViewController.swift; sourceTree = "<group>"; };
 		9680E9C21DBEDEF0006EAC53 /* PointAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PointAnnotation.swift; sourceTree = "<group>"; };
+		96940E061DC9135200F62002 /* UIViewController+TaskError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+TaskError.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,6 +161,7 @@
 			children = (
 				9680E9891DB58843006EAC53 /* TravelLocationsMapViewController.swift */,
 				9680E98B1DB5887D006EAC53 /* PhotoAlbumViewController.swift */,
+				96940E061DC9135200F62002 /* UIViewController+TaskError.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -387,6 +390,7 @@
 				9680E9931DBAF90B006EAC53 /* FlickrClient.swift in Sources */,
 				9680E9951DBAFC0E006EAC53 /* SuperClient.swift in Sources */,
 				9680E98A1DB58843006EAC53 /* TravelLocationsMapViewController.swift in Sources */,
+				96940E071DC9135200F62002 /* UIViewController+TaskError.swift in Sources */,
 				9680E9A31DBD4FB2006EAC53 /* CoreDataStack.swift in Sources */,
 				9680E99C1DBB8DE3006EAC53 /* Model.xcdatamodeld in Sources */,
 				9680E98C1DB5887D006EAC53 /* PhotoAlbumViewController.swift in Sources */,

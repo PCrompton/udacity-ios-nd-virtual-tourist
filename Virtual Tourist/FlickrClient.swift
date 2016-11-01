@@ -19,7 +19,7 @@ class FlickrClient: SuperClient {
         return Singleton.sharedInstance
     }
     
-    func search(by latitude: Double, by longitude: Double, completion: ((_ photos: [PhotoMeta]) -> Void)?) {
+    func search(by latitude: Double, by longitude: Double, completion: ((_ photos: [PhotoMeta]?, _ error: Error?) -> Void)?) {
         let methodParameters = [
             Constants.ParameterKeys.Method: Constants.ParameterValues.SearchMethod,
             Constants.ParameterKeys.APIKey: Constants.ParameterValues.APIKey,
@@ -29,14 +29,14 @@ class FlickrClient: SuperClient {
             Constants.ParameterKeys.Format: Constants.ParameterValues.ResponseFormat,
             Constants.ParameterKeys.NoJSONCallback: Constants.ParameterValues.DisableJSONCallback
         ]
-        getPhotos(with: methodParameters) {(photos) in
+        getPhotos(with: methodParameters) {(photos, error) in
             performUpdatesOnMain {
-                completion?(photos)
+                completion?(photos, error)
             }
         }
     }
     
-    func getPhotos(with methodParameters: [String: Any], completion: ((_ photos: [PhotoMeta]) -> Void)?) {
+    func getPhotos(with methodParameters: [String: Any], completion: ((_ photos: [PhotoMeta]?, _ error: Error?) -> Void)?) {
         let url = getURL(for: Constants.urlComponents, with: nil, with: methodParameters)
         print(url.absoluteString)
         let request = createRequest(for: url, as: HTTPMethod.get, with: nil, with: nil)
@@ -45,41 +45,48 @@ class FlickrClient: SuperClient {
             performUpdatesOnMain {
                 /* GUARD: Did Flickr return an error (stat != ok)? */
                 guard let stat = result?[Constants.ResponseKeys.Status] as? String , stat == Constants.ResponseValues.OKStatus else {
-                    fatalError("Flickr API returned an error. See error code and message in \(result)")
+                    completion?(nil, error)
+                    return
                 }
                 
                 /* GUARD: Is "photos" key in our result? */
                 guard let photosDictionary = result?[Constants.ResponseKeys.Photos] as? [String:Any] else {
-                    fatalError("Cannot find keys '\(Constants.ResponseKeys.Photos)' in \(result)")
+                    completion?(nil, NSError(domain: "Cannot find keys \(Constants.ResponseKeys.Photos)", code: 1, userInfo: nil))
+                    return
                 }
                 
                 /* GUARD: Is "pages" key in the photosDictionary? */
                 guard (photosDictionary[Constants.ResponseKeys.Pages] as? Int) != nil else {
-                    fatalError("Cannot find key '\(Constants.ResponseKeys.Pages)' in \(photosDictionary)")
+                    completion?(nil, NSError(domain: "Cannot find key \(Constants.ResponseKeys.Pages)", code: 1, userInfo: nil))
+                    return
                 }
                 
                 guard let photos = photosDictionary[Constants.ResponseKeys.Photo] as? [[String:Any]] else {
-                    fatalError("Cannot find key '\(Constants.ResponseKeys.Photo)' in \(photosDictionary)")
+                    completion?(nil, NSError(domain: "Cannot find key \(Constants.ResponseKeys.Photo)", code: 1, userInfo: nil))
+                    return
                 }
                 
                 var photosArray = [PhotoMeta]()
                 for photo in photos {
                     
                     guard let title = photo[Constants.ResponseKeys.Title] as? String else {
-                        fatalError("Cannot find key '\(Constants.ResponseKeys.Title)' in \(photo)")
+                        completion?(nil, NSError(domain: "Cannot find key \(Constants.ResponseKeys.Title)", code: 1, userInfo: nil))
+                        return
                     }
                     
                     guard let urlString = photo[Constants.ResponseKeys.MediumURL] as? String else {
-                        fatalError("Cannot find key '\(Constants.ResponseKeys.MediumURL)' in \(photo)")
+                        completion?(nil, NSError(domain: "Cannot find key \(Constants.ResponseKeys.MediumURL)", code: 1, userInfo: nil))
+                        return
                     }
                     
                     guard let url = URL(string: urlString) else {
-                        fatalError("Cannot convert '\(urlString) to type URL")
+                        completion?(nil, NSError(domain: "Cannot convert \(urlString)", code: 1, userInfo: nil))
+                        return
                     }
                     
                     photosArray.append(PhotoMeta(url: url, title: title))
                 }
-                completion?(photosArray)
+                completion?(photosArray, nil)
             }
         }
     }
