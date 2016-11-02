@@ -76,16 +76,5 @@ extension FlickrClient {
         struct ResponseValues {
             static let OKStatus = "ok"
         }
-        
-        // FIX: As of Swift 2.2, using strings for selectors has been deprecated. Instead, #selector(methodName) should be used.
-        /*
-         // MARK: Selectors
-         struct Selectors {
-         static let KeyboardWillShow: Selector = "keyboardWillShow:"
-         static let KeyboardWillHide: Selector = "keyboardWillHide:"
-         static let KeyboardDidShow: Selector = "keyboardDidShow:"
-         static let KeyboardDidHide: Selector = "keyboardDidHide:"
-         }
-         */
     }
 }

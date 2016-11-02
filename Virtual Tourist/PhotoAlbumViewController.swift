@@ -82,10 +82,8 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
         if let numSavedPhotos = fetchedResultsController?.fetchedObjects?.count {
             if numSavedPhotos == 0 {
                 setPhotos() {
-                    performUpdatesOnMain {
-                        self.stack.safeSaveContext()
-                        completion?()
-                    }
+                    self.stack.save()
+                    completion?()
                 }
             } else {
                 for item in fetchedResultsController!.fetchedObjects! {
@@ -107,32 +105,30 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
                     self.presentError(title: "Unable to download photos", errorMessage: error!.localizedDescription)
                     return
                 }
-                performUpdatesOnMain {
-                    if let totalPhotos = Int16(exactly: photosArray.count) {
-                        self.pin?.totalPhotos = totalPhotos
-                    } else {
-                        self.pin?.totalPhotos = 0
-                    }
-                    let startIndex: Int
-                        
-                    if self.pin!.set == 0 || self.pin!.totalPhotos == 0 {
-                        startIndex = photosArray.startIndex
-                    } else {
-                        startIndex = (self.maxPhotos * Int(self.pin!.set)) % Int(self.pin!.totalPhotos)
-                    }
-                    
-                    if photosArray.count == 1 {
-                        self.photos.append(self.createPhoto(from: photosArray[0]))
-                    } else if photosArray.count > 1 {
-                        self.createPhotos(from: photosArray[startIndex...photosArray.endIndex-1])
-                        if self.photos.count < self.maxPhotos && photosArray.count >= self.maxPhotos {
-                            self.createPhotos(from: photosArray[photosArray.startIndex...photosArray.endIndex-1])
-                        }
-                    } else if photosArray.count == 0 {
-                        self.noPhotosFound.isHidden = false
-                    }
-                    completion?()
+                if let totalPhotos = Int16(exactly: photosArray.count) {
+                    self.pin?.totalPhotos = totalPhotos
+                } else {
+                    self.pin?.totalPhotos = 0
                 }
+                let startIndex: Int
+                    
+                if self.pin!.set == 0 || self.pin!.totalPhotos == 0 {
+                    startIndex = photosArray.startIndex
+                } else {
+                    startIndex = (self.maxPhotos * Int(self.pin!.set)) % Int(self.pin!.totalPhotos)
+                }
+                
+                if photosArray.count == 1 {
+                    self.photos.append(self.createPhoto(from: photosArray[0]))
+                } else if photosArray.count > 1 {
+                    self.createPhotos(from: photosArray[startIndex...photosArray.endIndex-1])
+                    if self.photos.count < self.maxPhotos && photosArray.count >= self.maxPhotos {
+                        self.createPhotos(from: photosArray[photosArray.startIndex...photosArray.endIndex-1])
+                    }
+                } else if photosArray.count == 0 {
+                    self.noPhotosFound.isHidden = false
+                }
+                completion?()
             }
         }
     }
@@ -148,7 +144,7 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
     }
     
     func createPhoto(from meta: FlickrClient.PhotoMeta) -> Photo {
-        return Photo(with: meta.url.absoluteString, pin: pin!, title: meta.title, insertInto: stack.context)
+        return Photo(with: meta.url.absoluteString, pin: pin!, title: meta.title, insertInto: fetchedResultsController!.managedObjectContext)
     }
     
     func downloadPhoto(photo: Photo, completion: (() -> Void)?) {
@@ -160,9 +156,10 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
             fatalError("Unable to convert \(urlString) to URL")
         }
         flickrClient.getPhoto(from: url) { (data, error) in
-            
             if let error = error {
+                performUpdatesOnMain {
                 self.presentError(title: "Error downloading photos", errorMessage: error.localizedDescription)
+                }
                 return
             }
             
@@ -194,24 +191,23 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
         }
         
         for photo in photosToDelete {
-            stack.context.delete(photo)
+            fetchedResultsController!.managedObjectContext.delete(photo)
             photos.remove(at: photos.index(of: photo)!)
         }
-        stack.safeSaveContext()
+        stack.save()
         photoCollectionView.reloadData()
         updateButton()
     }
     
     func getNewCollection() {
         stack.delete(objects: photos)
-        stack.safeSaveContext()
+        stack.save()
         photos.removeAll()
         pin?.set += 1
         setPhotos {
+            self.stack.save()
             performUpdatesOnMain {
-                self.stack.safeSaveContext()
                 self.photoCollectionView.reloadData()
-                
                 self.updateButton()
             }
         }
@@ -269,9 +265,8 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
             print("downloading photo...")
             cell.activityIndicator.startAnimating()
             downloadPhoto(photo: photo) {
+                self.stack.save()
                 performUpdatesOnMain {
-                    print("Cell for item at index path")
-                    self.stack.safeSaveContext()
                     cell.activityIndicator.stopAnimating()
                     cell.imageView.image = photo.image
                 }

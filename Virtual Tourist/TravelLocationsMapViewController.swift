@@ -45,10 +45,10 @@ class TravelLocationsMapViewController: CoreDataViewController, MKMapViewDelegat
         if recognizer.state == UIGestureRecognizerState.began {
             let touchPoint = recognizer.location(in: mapView)
             let coordinate = mapView.convert(touchPoint, toCoordinateFrom: mapView)
-            let pin = Pin(with: coordinate, insertInto: stack.context)
+            let pin = Pin(with: coordinate, insertInto: fetchedResultsController!.managedObjectContext)
             mapView.addAnnotation(pin.annotation)
             print("save pin")
-            stack.safeSaveContext()
+            stack.save()
         }
     }
     
@@ -78,8 +78,7 @@ class TravelLocationsMapViewController: CoreDataViewController, MKMapViewDelegat
                 mapView.deselectAnnotation(annotation, animated: false)
             } else {
                 mapView.removeAnnotation(annotation)
-                stack.context.delete(annotation.pin)
-                stack.safeSaveContext()
+                stack.save()
             }
         }
     }

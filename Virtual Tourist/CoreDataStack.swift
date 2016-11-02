@@ -15,6 +15,8 @@ struct CoreDataStack {
     private let coordinator : NSPersistentStoreCoordinator
     private let modelURL : URL
     private let dbURL : URL
+    private let persistingContext: NSManagedObjectContext
+    private let backgroundContext: NSManagedObjectContext
     let context : NSManagedObjectContext
     
     // MARK:  - Initializers
@@ -37,9 +39,17 @@ struct CoreDataStack {
         // Create the store coordinator
         coordinator = NSPersistentStoreCoordinator(managedObjectModel: model)
         
+        // Create a persistingContext (private queue) and a child one (main queue)
         // create a context and add connect it to the coordinator
+        persistingContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        persistingContext.persistentStoreCoordinator = coordinator
+        
         context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-        context.persistentStoreCoordinator = coordinator
+        context.parent = persistingContext
+
+        // Create a background context child of main context
+        backgroundContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        backgroundContext.parent = context
         
         // Add a SQLite store located in the documents folder
         let fm = FileManager.default
@@ -86,22 +96,46 @@ struct CoreDataStack {
             context.delete(object)
         }
     }
-
-    // MARK:  - Save
-    func saveContext() throws {
-        if context.hasChanges {
-            try context.save()
-            print("Successfully saved context")
-        } else {
-            print("no changes to context")
+    
+    // MARK: - CoreDataStack (Batch Processing in the Background)
+    
+    typealias Batch = (_ workerContext: NSManagedObjectContext) -> ()
+    
+    func performBackgroundBatchOperation(batch: @escaping Batch) {
+        
+        backgroundContext.perform() {
+            batch(self.backgroundContext)
+            
+            // Save it to the parent context, so normal saving
+            // can work
+            do {
+                try self.backgroundContext.save()
+            } catch {
+                fatalError("Error while saving backgroundContext: \(error)")
+            }
         }
     }
-    
-    func safeSaveContext() {
-        do {
-            try saveContext()
-        } catch {
-            print("Unable to save context")
+
+    // MARK:  - Save
+    func save() {
+        context.performAndWait { 
+            if self.context.hasChanges {
+                do {
+                    try self.context.save()
+                    print("Successfully saved context")
+                } catch {
+                    fatalError("Error while saving main context: \(error)")
+                }
+                
+                // now we save in the background
+                self.persistingContext.perform() {
+                    do {
+                        try self.persistingContext.save()
+                    } catch {
+                        fatalError("Error while saving persisting context: \(error)")
+                    }
+                }
+            }
         }
     }
 }

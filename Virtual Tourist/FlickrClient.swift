@@ -30,9 +30,7 @@ class FlickrClient: SuperClient {
             Constants.ParameterKeys.NoJSONCallback: Constants.ParameterValues.DisableJSONCallback
         ]
         getPhotos(with: methodParameters) {(photos, error) in
-            performUpdatesOnMain {
-                completion?(photos, error)
-            }
+            completion?(photos, error)
         }
     }
     
@@ -42,52 +40,51 @@ class FlickrClient: SuperClient {
         let request = createRequest(for: url, as: HTTPMethod.get, with: nil, with: nil)
         
         getJson(for: request) { (result, error) in
-            performUpdatesOnMain {
-                /* GUARD: Did Flickr return an error (stat != ok)? */
-                guard let stat = result?[Constants.ResponseKeys.Status] as? String , stat == Constants.ResponseValues.OKStatus else {
-                    completion?(nil, error)
-                    return
-                }
-                
-                /* GUARD: Is "photos" key in our result? */
-                guard let photosDictionary = result?[Constants.ResponseKeys.Photos] as? [String:Any] else {
-                    completion?(nil, NSError(domain: "Cannot find keys \(Constants.ResponseKeys.Photos)", code: 1, userInfo: nil))
-                    return
-                }
-                
-                /* GUARD: Is "pages" key in the photosDictionary? */
-                guard (photosDictionary[Constants.ResponseKeys.Pages] as? Int) != nil else {
-                    completion?(nil, NSError(domain: "Cannot find key \(Constants.ResponseKeys.Pages)", code: 1, userInfo: nil))
-                    return
-                }
-                
-                guard let photos = photosDictionary[Constants.ResponseKeys.Photo] as? [[String:Any]] else {
-                    completion?(nil, NSError(domain: "Cannot find key \(Constants.ResponseKeys.Photo)", code: 1, userInfo: nil))
-                    return
-                }
-                
-                var photosArray = [PhotoMeta]()
-                for photo in photos {
-                    
-                    guard let title = photo[Constants.ResponseKeys.Title] as? String else {
-                        completion?(nil, NSError(domain: "Cannot find key \(Constants.ResponseKeys.Title)", code: 1, userInfo: nil))
-                        return
-                    }
-                    
-                    guard let urlString = photo[Constants.ResponseKeys.MediumURL] as? String else {
-                        completion?(nil, NSError(domain: "Cannot find key \(Constants.ResponseKeys.MediumURL)", code: 1, userInfo: nil))
-                        return
-                    }
-                    
-                    guard let url = URL(string: urlString) else {
-                        completion?(nil, NSError(domain: "Cannot convert \(urlString)", code: 1, userInfo: nil))
-                        return
-                    }
-                    
-                    photosArray.append(PhotoMeta(url: url, title: title))
-                }
-                completion?(photosArray, nil)
+            /* GUARD: Did Flickr return an error (stat != ok)? */
+            guard let stat = result?[Constants.ResponseKeys.Status] as? String , stat == Constants.ResponseValues.OKStatus else {
+                completion?(nil, error)
+                return
             }
+            
+            /* GUARD: Is "photos" key in our result? */
+            guard let photosDictionary = result?[Constants.ResponseKeys.Photos] as? [String:Any] else {
+                completion?(nil, NSError(domain: "Cannot find keys \(Constants.ResponseKeys.Photos)", code: 1, userInfo: nil))
+                return
+            }
+            
+            /* GUARD: Is "pages" key in the photosDictionary? */
+            guard (photosDictionary[Constants.ResponseKeys.Pages] as? Int) != nil else {
+                completion?(nil, NSError(domain: "Cannot find key \(Constants.ResponseKeys.Pages)", code: 1, userInfo: nil))
+                return
+            }
+            
+            guard let photos = photosDictionary[Constants.ResponseKeys.Photo] as? [[String:Any]] else {
+                completion?(nil, NSError(domain: "Cannot find key \(Constants.ResponseKeys.Photo)", code: 1, userInfo: nil))
+                return
+            }
+            
+            var photosArray = [PhotoMeta]()
+            for photo in photos {
+                
+                guard let title = photo[Constants.ResponseKeys.Title] as? String else {
+                    completion?(nil, NSError(domain: "Cannot find key \(Constants.ResponseKeys.Title)", code: 1, userInfo: nil))
+                    return
+                }
+                
+                guard let urlString = photo[Constants.ResponseKeys.MediumURL] as? String else {
+                    completion?(nil, NSError(domain: "Cannot find key \(Constants.ResponseKeys.MediumURL)", code: 1, userInfo: nil))
+                    return
+                }
+                
+                guard let url = URL(string: urlString) else {
+                    completion?(nil, NSError(domain: "Cannot convert \(urlString)", code: 1, userInfo: nil))
+                    return
+
+                }
+                
+                photosArray.append(PhotoMeta(url: url, title: title))
+            }
+            completion?(photosArray, nil)
         }
     }
     
