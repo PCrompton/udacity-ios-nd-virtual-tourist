@@ -29,7 +29,7 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
     override func viewDidLoad() {
         super.viewDidLoad()
         photoCollectionView.allowsMultipleSelection = true
-        configureFlowLayout(viewWidth: self.view.frame.width, viewHeight: self.view.frame.height)
+        configureFlowLayout(viewWidth: view.frame.width, viewHeight: view.frame.height)
         
         addAnnotationToMapView(completion: nil)
         
@@ -42,13 +42,13 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
     
     // Mark: Layout Functions
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        let newWidth = self.view.frame.height
-        let newHeight = self.view.frame.width
+        let newWidth = view.frame.height
+        let newHeight = view.frame.width
         configureFlowLayout(viewWidth: newWidth, viewHeight: newHeight)
         
     }
     
-    // Mark: Photo Management Functions
+    
     func configureFlowLayout(viewWidth width: CGFloat, viewHeight height: CGFloat) {
         let numPerRow: Int
         if width < height {
@@ -63,11 +63,12 @@ class PhotoAlbumViewController: CoreDataViewController, MKMapViewDelegate, UICol
         
     }
     
+    // Mark: Photo Management Functions
     func setFetchedResultsController() {
         photos.removeAll()
         let fetchRequst = NSFetchRequest<NSManagedObject>(entityName: "Photo")
         fetchRequst.sortDescriptors = [NSSortDescriptor(key: "index", ascending: true)]
-        if let pin = self.pin {
+        if let pin = pin {
             let predicate = NSPredicate(format: "pin = %@", argumentArray: [pin])
             fetchRequst.predicate = predicate
         }
